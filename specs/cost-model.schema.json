@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CostModel",
+  "description": "Shape of data/boston-cost-seed.json. Every figure carries a source and confidence.",
+  "type": "object",
+  "required": ["market", "updated", "data_points", "assumptions"],
+  "properties": {
+    "market": { "type": "string" },
+    "updated": { "type": "string", "format": "date" },
+    "data_points": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["metric", "value", "unit", "source_name", "source_url", "basis", "as_of", "confidence"],
+        "properties": {
+          "metric": { "enum": ["hourly_rate_avg", "hourly_rate_low", "hourly_rate_high", "monthly_cost", "annual_all_in_low", "annual_all_in_high", "placement_fee", "daycare_infant_monthly"] },
+          "segment": { "type": "string", "description": "e.g. full_time, part_time, newborn, all" },
+          "value": { "type": "number" },
+          "unit": { "enum": ["usd_per_hour", "usd_per_month", "usd_per_year", "usd_flat", "pct_of_annual_wage"] },
+          "source_name": { "type": "string" },
+          "source_url": { "type": "string", "format": "uri" },
+          "basis": { "enum": ["listing_asking_rate", "provider_reported", "survey", "government_wage_data", "agency_disclosed", "family_reported", "modeled"] },
+          "as_of": { "type": "string" },
+          "confidence": { "enum": ["low", "medium", "high"] },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "assumptions": { "type": "object" }
+  }
+}

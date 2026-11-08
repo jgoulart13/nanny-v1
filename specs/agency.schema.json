@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agency",
+  "type": "object",
+  "required": ["name", "contact_email", "status"],
+  "properties": {
+    "name": { "type": "string" },
+    "website": { "type": "string", "format": "uri" },
+    "contact_name": { "type": "string" },
+    "contact_email": { "type": "string", "format": "email" },
+    "service_area_zips": { "type": "array", "items": { "type": "string" } },
+    "arrangements": { "type": "array", "items": { "enum": ["full_time", "part_time", "nanny_share", "newborn_care", "temporary_or_travel"] } },
+    "placement_fee_disclosed": { "type": "string", "description": "Free text as stated by the agency, e.g. '15% of first-year gross'" },
+    "guarantee_period": { "type": "string" },
+    "demand_constrained": { "enum": ["yes", "no", "mixed", "unknown"] },
+    "would_pay_per_brief": { "enum": ["yes", "no", "maybe", "unknown"] },
+    "status": { "enum": ["prospect", "interviewed", "receiving_briefs", "declined", "paused"] },
+    "notes": { "type": "string" }
+  }
+}

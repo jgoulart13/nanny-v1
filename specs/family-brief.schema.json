@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://{{DOMAIN}}/specs/family-brief.schema.json",
+  "title": "FamilyBrief",
+  "description": "A family's childcare need. Contains no child names or birthdates by design.",
+  "type": "object",
+  "required": ["contact", "location", "need", "consent", "source"],
+  "properties": {
+    "contact": {
+      "type": "object",
+      "required": ["first_name", "email"],
+      "properties": {
+        "first_name": { "type": "string", "maxLength": 50 },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string", "maxLength": 20 },
+        "preferred_contact": { "enum": ["email", "phone", "text"] }
+      }
+    },
+    "location": {
+      "type": "object",
+      "required": ["zip"],
+      "properties": {
+        "zip": { "type": "string", "pattern": "^\\d{5}$" },
+        "neighborhood": { "type": "string", "maxLength": 60 }
+      }
+    },
+    "need": {
+      "type": "object",
+      "required": ["arrangement", "start_timing", "children"],
+      "properties": {
+        "arrangement": { "enum": ["full_time", "part_time", "nanny_share", "newborn_care", "temporary_or_travel", "not_sure"] },
+        "live_in": { "type": "boolean", "default": false },
+        "hours_per_week": { "type": "integer", "minimum": 1, "maximum": 70 },
+        "schedule_notes": { "type": "string", "maxLength": 500 },
+        "start_timing": { "enum": ["asap", "within_1_month", "1_3_months", "3_plus_months", "expecting"] },
+        "children": {
+          "type": "array",
+          "minItems": 0,
+          "maxItems": 6,
+          "description": "Age bands only. Empty array allowed when expecting.",
+          "items": { "enum": ["expecting", "0_12m", "1_2y", "3_5y", "6_12y", "13_plus"] }
+        },
+        "requirements": {
+          "type": "array",
+          "items": { "enum": ["drives", "own_car", "pets_ok", "cooking", "light_housekeeping", "homework_help", "second_language", "special_needs_experience", "newborn_experience", "cpr_certified"] }
+        },
+        "budget_hourly_max": { "type": "number", "minimum": 0 },
+        "open_to_independent": { "type": "boolean", "default": false },
+        "notes": { "type": "string", "maxLength": 1000 }
+      }
+    },
+    "consent": {
+      "type": "object",
+      "required": ["share_with_agencies", "terms_version"],
+      "properties": {
+        "share_with_agencies": { "type": "boolean", "const": true },
+        "keep_profile_for_future": { "type": "boolean", "default": false },
+        "terms_version": { "type": "string" }
+      }
+    },
+    "source": {
+      "type": "object",
+      "required": ["channel"],
+      "properties": {
+        "channel": { "enum": ["web", "api", "mcp"] },
+        "referrer": { "type": "string" },
+        "utm": { "type": "object", "additionalProperties": { "type": "string" } },
+        "self_reported": { "enum": ["ai_assistant", "google", "friend", "parent_group", "agency", "other"] },
+        "ai_assistant_name": { "type": "string", "maxLength": 40 },
+        "submitted_by_agent": { "type": "string", "maxLength": 80, "description": "Agent/client name if submitted via API or MCP" }
+      }
+    }
+  },
+  "additionalProperties": false
+}

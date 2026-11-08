@@ -1,0 +1,56 @@
+{
+  "market": "Boston, MA",
+  "updated": "2026-11-08",
+  "_readme": "Public data is listing/asking-rate or modeled, NOT transacted agency-placed pricing. That gap is what we collect via the quote log. Re-verify every figure before launch.",
+  "data_points": [
+    {
+      "metric": "hourly_rate_avg", "segment": "all", "value": 22.61, "unit": "usd_per_hour",
+      "source_name": "Nanny Lane — Boston nanny cost", "source_url": "https://www.nannylane.com/en-ca/cost/nanny/ma/boston",
+      "basis": "listing_asking_rate", "as_of": "2026", "confidence": "medium",
+      "notes": "A separate Nanny Lane MA page lists Boston at $24.88/hr; the pages disagree. Use a range."
+    },
+    {
+      "metric": "hourly_rate_avg", "segment": "newborn", "value": 24.20, "unit": "usd_per_hour",
+      "source_name": "Care.com — Newborn nanny cost, Boston", "source_url": "https://www.care.com/cost/newborn-nannies/boston-ma",
+      "basis": "provider_reported", "as_of": "2026-06", "confidence": "medium",
+      "notes": "Average starting rate."
+    },
+    {
+      "metric": "hourly_rate_avg", "segment": "child_care_provider", "value": 22.66, "unit": "usd_per_hour",
+      "source_name": "Care.com — Child care cost, Boston", "source_url": "https://www.care.com/cost/child-care/boston-ma",
+      "basis": "provider_reported", "as_of": "2026-04", "confidence": "medium"
+    },
+    {
+      "metric": "hourly_rate_avg", "segment": "part_time", "value": 21.37, "unit": "usd_per_hour",
+      "source_name": "Nanny Lane — Part-time nanny, Boston", "source_url": "https://www.nannylane.com/cost/part-time-nanny/ma/boston",
+      "basis": "listing_asking_rate", "as_of": "2026", "confidence": "medium"
+    },
+    {
+      "metric": "monthly_cost", "segment": "full_time", "value": 4500, "unit": "usd_per_month",
+      "source_name": "DaycareCalc — Boston nanny cost", "source_url": "https://daycarecalc.com/nanny-costs/city/boston-ma",
+      "basis": "modeled", "as_of": "2026", "confidence": "low",
+      "notes": "Includes employer payroll taxes; ~$27/hr effective. Built from BLS OEWS 2023 plus market surveys."
+    },
+    {
+      "metric": "daycare_infant_monthly", "segment": "infant_center", "value": 2600, "unit": "usd_per_month",
+      "source_name": "DaycareCalc — Boston nanny vs daycare", "source_url": "https://daycarecalc.com/nanny-costs/city/boston-ma",
+      "basis": "modeled", "as_of": "2026", "confidence": "low"
+    },
+    {
+      "metric": "annual_all_in_low", "segment": "full_time", "value": 70000, "unit": "usd_per_year",
+      "source_name": "Local agency blog — Boston nanny cost breakdown", "source_url": "https://turbot-tan-8za5.squarespace.com/blog/how-much-does-a-nanny-cost-a-detailed-breakdown-for-boston-massachusetts",
+      "basis": "agency_disclosed", "as_of": "2025", "confidence": "low",
+      "notes": "Stated range $70K–$105K+ total employer cost. Agency marketing; treat as an upper-market anchor."
+    },
+    {
+      "metric": "annual_all_in_high", "segment": "full_time", "value": 105000, "unit": "usd_per_year",
+      "source_name": "Local agency blog — Boston nanny cost breakdown", "source_url": "https://turbot-tan-8za5.squarespace.com/blog/how-much-does-a-nanny-cost-a-detailed-breakdown-for-boston-massachusetts",
+      "basis": "agency_disclosed", "as_of": "2025", "confidence": "low"
+    }
+  ],
+  "assumptions": {
+    "employer_tax_rate_estimate": { "value": null, "todo": "TODO(jonathan): verify federal + MA household employer taxes (SS, Medicare, FUTA, MA UI, MA PFML) for 2026 with a payroll provider; show as a range" },
+    "placement_fee": { "value": null, "todo": "Collect from agency discovery (H3). Show 'TBD — collecting' until ≥3 agencies disclose." },
+    "nanny_share_discount": { "value": null, "todo": "Collect from families/agencies" }
+  }
+}
