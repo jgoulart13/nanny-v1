@@ -12,6 +12,7 @@ Jonathan is a novice programmer. So:
 
 ## Stack (don't change without asking)
 - Next.js (App Router) + TypeScript + Tailwind CSS
+- UI components: shadcn/ui, themed from `design.md` (read it before any UI work). Install only the components a step needs. Content must stay server-rendered: interactive components may enhance the page but never hide facts (FAQ answers and cost figures live in the HTML).
 - Hosted on Vercel
 - Database: Postgres through the Vercel Marketplace (Neon), with Drizzle ORM
 - Email: Resend
