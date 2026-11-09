@@ -22,8 +22,18 @@ export const config = {
   termsVersion: "2026-11-08",
 } as const;
 
-/** Full site URL, e.g. "https://example.com". */
-export const siteUrl = `https://${config.domain}`;
+/**
+ * Full site URL, e.g. "https://example.com", used in the sitemap, robots and
+ * email links. Order: NEXT_PUBLIC_SITE_URL (see .env.example) if set, then
+ * the Vercel deployment's own URL (set automatically by Vercel), then the
+ * configured domain.
+ */
+export const siteUrl = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : `https://${config.domain}`)
+).replace(/\/$/, "");
 
 /** True while any placeholder is still in use. Later steps can warn on this. */
 export const hasPlaceholders = Object.values(config).some(

@@ -1,0 +1,122 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * Theme — every value here comes from design.md. Change design.md first,
+ * then mirror it here. No dark mode in v1.
+ */
+
+@theme inline {
+  /* shadcn semantic colors (used by components/ui/*) */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* design.md named tokens, usable as bg-sage, text-pine, border-sand, etc. */
+  --color-cream: #f7f3ec;
+  --color-ink: #1f2d2a;
+  --color-pine: #3f5e52;
+  --color-muted-ink: #5f6b66;
+  --color-sage: #d7e2d3;
+  --color-blush: #e9cbc5;
+  --color-blue: #d1dfe9;
+  --color-sand: #bda58b;
+  --color-sand-light: #e3dacb;
+  --color-sand-dark: #7a6650;
+
+  /* Fonts (loaded in app/layout.tsx) */
+  --font-sans: var(--font-figtree);
+  --font-heading: var(--font-fraunces);
+
+  /* Radius: ~0.625rem on cards; buttons are pills (rounded-full) */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* shadcn variable mapping from design.md */
+:root {
+  --background: #f7f3ec; /* cream */
+  --foreground: #1f2d2a; /* ink */
+  --card: #ffffff;
+  --card-foreground: #1f2d2a;
+  --popover: #ffffff;
+  --popover-foreground: #1f2d2a;
+  --primary: #3f5e52; /* pine */
+  --primary-foreground: #ffffff;
+  --secondary: #d7e2d3; /* sage */
+  --secondary-foreground: #1f2d2a;
+  --muted: #efeae1;
+  --muted-foreground: #5f6b66; /* muted-ink */
+  --accent: #d1dfe9; /* blue */
+  --accent-foreground: #1f2d2a;
+  --destructive: #b4432f;
+  --border: #e3dacb; /* light sand */
+  --input: #e3dacb;
+  --ring: #3f5e52;
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    /* design.md: body ≥ 17px on mobile, line-height 1.6 */
+    font-size: 17px;
+    line-height: 1.6;
+  }
+  h1,
+  h2 {
+    @apply font-heading font-normal tracking-tight text-ink;
+  }
+  h3 {
+    @apply font-sans font-semibold text-ink;
+  }
+  a,
+  button:not(:disabled),
+  [role="button"]:not(:disabled),
+  label[for],
+  summary {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* Small uppercase label, e.g. "BOSTON · 2026" */
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.14em] text-muted-ink;
+  }
+  /* Readable text column (~68 characters) */
+  .prose-width {
+    max-width: 68ch;
+  }
+  /* Body links: pine, underlined */
+  .text-link {
+    @apply text-pine underline underline-offset-4 decoration-sand hover:decoration-pine;
+  }
+}
