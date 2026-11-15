@@ -24,6 +24,8 @@ Soft colors are for **surfaces only**. Text and buttons always use ink or pine (
 | `sand` | #BDA58B | Borders, dividers, decorative only | Not for text (2.1:1) |
 | `sand-dark` | #7A6650 | Small labels and eyebrow text, if needed | 4.9:1 on cream |
 
+**Color roles (updated 2026-11-15):** **sage = tools and numbers** (estimator, data tables, result cards). **blush = people and feelings** (the home page's emotional journey section, parent quotes, "you're not alone" notes, the "Email me this estimate" card, and the soft wash behind the home hero). Blush is still a surface only, with ink text on top (9.4:1). Aim for blush showing up on most pages, never on buttons or text.
+
 **shadcn variable mapping** (convert to the format shadcn's `globals.css` uses):
 `--background` cream · `--foreground` ink · `--primary` pine · `--primary-foreground` #FFFFFF · `--secondary` sage · `--secondary-foreground` ink · `--muted` #EFEAE1 · `--muted-foreground` muted-ink · `--accent` blue · `--accent-foreground` ink · `--card` #FFFFFF · `--card-foreground` ink · `--border` #E3DACB (light sand) · `--input` #E3DACB · `--ring` pine · `--destructive` #B4432F
 No dark mode in v1.
@@ -57,9 +59,14 @@ No dark mode in v1.
 | **Opt-in** | A blush card at the end of the brief: "Keep my profile for next time" |
 
 ## Imagery
-- **None in v1.** No stock photos, especially no smiling-nanny stock. Use typography, the cream and sage color fields, and the numbers.
-- Optional later: one simple line illustration or texture. Never characters or mascots.
-
+- **One hero image on the home page.** Everything else stays typographic.
+- **Style:** a quiet still life in the Mushie / Little Dutch mood. **No faces, no people, no stock nannies.** Soft daylight, cream/sage/blush palette, shallow depth of field, lots of empty space on one side for the headline.
+- **Concept options (pick one):**
+  1. *The front door:* a Boston brownstone entryway with small rain boots, a folded sage blanket and a canvas tote by the door. The handoff moment.
+  2. *The kitchen table:* morning light, a coffee mug, a sippy cup and a notebook with handwritten numbers and a pencil. The "figuring it out" moment.
+  3. *The nursery corner:* a cream armchair, a blush knit throw, a sage plush toy on the floor. The "who will care for them" moment.
+- **Source:** AI-generated (cheapest, exact palette) or licensed (Unsplash / Stocksy). If generated: no text, no logos, no hands or faces, and check for artifacts. Export a WebP under 200 KB, give it real alt text, and use `next/image` with priority.
+- Placeholder until chosen: a soft cream→blush gradient block in the hero.
 ## Voice
 - Plainspoken, warm, specific. Write like a parent talking to another parent.
 - **Use:** "what you'll actually pay," "all-in," "we work for you," "here's where this number comes from."

@@ -20,3 +20,9 @@ Count behavior, not opinions. The sources of truth are: a brief submitted, an op
 ## Readout cadence
 - Weekly: pipeline counts (`06-measurement.md`).
 - At each gate: a one-paragraph verdict per hypothesis — **pass / fail / inconclusive**, and what we do next.
+
+## Update 2026-11-15: content-first v1
+The brief is hidden until G0 passes, so H5/H6 are measured on `/estimate` instead:
+- **H5 (proposed):** ≥20% of estimator users submit "Email me this estimate."
+- **H6 (proposed):** ≥30% of those check "I'd also like help finding care when the time comes."
+- **H4** is unchanged, now measured on guide traffic plus estimator use by AI-referred visitors.

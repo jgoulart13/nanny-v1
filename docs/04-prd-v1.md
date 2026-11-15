@@ -1,5 +1,14 @@
 # PRD — v1 Site
 
+> **Scope change, 2026-11-15 (this overrides the sections below where they conflict)**
+> v1 leads with **cost content**, not matching. See `docs/07-content-plan.md`.
+> - Primary CTA everywhere: **"See what it costs"** → `/boston/nanny-cost`. Secondary: **"Estimate your cost"** → `/estimate`.
+> - `/estimate` is its own page (the product). The pillar guide shows a short summary and links to it.
+> - `/faq` is its own page (it already exists); the cost page links to it rather than embedding the full FAQ.
+> - `/brief` and `/for-agencies` stay in the code but are **hidden**: no nav, footer or CTA links, `noindex`, excluded from the sitemap. Nothing says "Get matched" or "vetted agencies" anywhere on the public site.
+> - New demand signal replacing the brief (H5/H6): on `/estimate`, an optional **"Email me this estimate"** form (email + estimate inputs only) with an unchecked box: *"I'd also like help finding care when the time comes."* Store in a `leads` table; sending the email can wait for Resend (step 05).
+> - Steps 03 (brief) and 05 (concierge ops) are **paused** until gate G0 passes. Step 03 will be rewritten as "estimate save + leads."
+
 ## Goal
 Measure real demand from families and from AI agents for a buyer-side, price-transparent front door to Boston nanny agencies, while collecting pricing data. **Speed over polish. Ship in under 2 weeks.**
 
