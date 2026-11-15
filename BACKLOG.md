@@ -5,3 +5,6 @@ Write them down here and move on. Revisit them only after a decision gate (see `
 
 | Date | Idea | Why it came up | Related hypothesis |
 |---|---|---|---|
+| 2026-11-09 | Employer-benefit channel (Carrot, Maven-style benefits paying agencies directly) | Nanny Haven call: Toast funded ~$20K/family through Carrot; BofA stipend too small to matter | Distribution (post-v1) |
+| 2026-11-09 | Doula / new-parent referral partnerships (New England Doula Support, NAPS) | Night-doula → day-nanny handoff is the natural life-event trigger; agencies report doulas rarely refer | H6 |
+| 2026-11-09 | Split "AI assistant" source into Gemini/Google AI Mode vs ChatGPT vs Claude vs Perplexity in brief `self_reported` | Hope's families write "Gemini" — likely Google AI Mode; worth separating in v1 analytics if cheap | H4 |
