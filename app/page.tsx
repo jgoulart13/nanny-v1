@@ -2,50 +2,34 @@ import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/button";
 import { DisclosureNote } from "@/components/disclosure-note";
-import {
-  agencyFeeExamples,
-  agencyFeeRange,
-  allInPending,
-  fullTimeExample,
-  hourlyAcrossSources,
-  hourlySourceNames,
-  shortSource,
-  typicalAllIn,
-  usdApprox,
-  usdApproxRange,
-} from "@/lib/costFacts";
-import { defaultInputs, usdRange } from "@/lib/estimator";
+import { readingList } from "@/lib/readingList";
+import { formatAsOf } from "@/lib/costData";
 import heroImage from "@/public/hero.webp";
 
 // design.md "Imagery": one hero image, no faces. Alt text is from design.md.
 const heroAlt =
   "A sunlit kitchen table with a coffee mug, a toddler's sippy cup and a notebook of handwritten numbers.";
 
-const journey = [
+// Guide cards (sage = main section color, design.md 2026-11-17).
+const guideCards = [
   {
-    title: "Trusting a stranger with your child",
-    body: "Agencies screen candidates, check references and stand behind a placement. Here's what that costs, and what you get for it.",
-    href: "/boston/nanny-cost/agency-fees",
-    link: "What agencies charge",
+    title: "What agencies charge",
+    teaser: "Placement fees, minimums and what you get for them.",
+    href: "/guides/nanny-agency-fees-boston",
   },
   {
-    title: "Not knowing what's fair to pay",
-    body: "Public numbers disagree, and most are asking rates. We put every source side by side so you can see the real range.",
-    href: "/boston/nanny-cost/wages",
-    link: "What Boston nannies earn",
+    title: "What Boston nannies earn",
+    teaser: "Hourly rates by arrangement, and why the numbers disagree.",
+    href: "/guides/boston-nanny-wages",
   },
   {
-    title: "Becoming an employer overnight",
-    body: "Hiring a nanny usually makes you a household employer, with taxes and paperwork you've never done before. Here's the short version.",
-    href: "/boston/nanny-cost/taxes",
-    link: "Nanny taxes in Massachusetts",
+    title: "Nanny taxes in Massachusetts",
+    teaser: "What changes the day you become a household employer.",
+    href: "/guides/massachusetts-nanny-taxes",
   },
 ];
 
 export default function HomePage() {
-  const taxesKnown = fullTimeExample.employerTaxes.known;
-  const hours = defaultInputs.hoursPerWeek;
-
   return (
     <main className="flex-1">
       {/* --- Hero: image right, headline on the empty left (wide screens); image above headline (phones, tablets) --- */}
@@ -79,8 +63,8 @@ export default function HomePage() {
                 fees, so you can plan with a clear head.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/boston/nanny-cost" className={buttonClass({ size: "lg" })}>
-                  See what it costs
+                <Link href="/guides" className={buttonClass({ size: "lg" })}>
+                  Read the guides
                 </Link>
                 <Link
                   href="/estimate"
@@ -94,88 +78,86 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- The journey (blush = people and feelings) --- */}
-      <section aria-labelledby="journey" className="bg-blush">
-        <div className="mx-auto max-w-5xl px-5 py-12 sm:py-16">
-          <h2 id="journey" className="text-3xl sm:text-4xl">
-            The part no one prepares you for
-          </h2>
-          <ul className="mt-8 grid gap-4 md:grid-cols-3">
-            {journey.map((j) => (
-              <li key={j.title} className="flex flex-col rounded-xl bg-cream p-6">
-                <h3 className="text-lg">{j.title}</h3>
-                <p className="mt-2 flex-1 text-[16px]">{j.body}</p>
-                <Link href={j.href} className="text-link mt-4 font-medium">
-                  {j.link} →
-                </Link>
-              </li>
-            ))}
-          </ul>
+      {/* --- Guides (sage cards) --- */}
+      <section aria-labelledby="guides" className="mx-auto max-w-5xl px-5 pt-12 sm:pt-16">
+        <h2 id="guides" className="text-3xl sm:text-4xl">
+          The part no one prepares you for
+        </h2>
+        <ul className="mt-8 grid gap-4 md:grid-cols-3">
+          {guideCards.map((g) => (
+            <li key={g.href}>
+              <Link
+                href={g.href}
+                className="group flex h-full flex-col rounded-xl bg-sage p-6 ring-1 ring-transparent transition-shadow hover:ring-pine"
+              >
+                <h3 className="font-heading text-2xl font-normal">{g.title}</h3>
+                <p className="mt-2 flex-1 text-ink">{g.teaser}</p>
+                <span className="mt-5 font-medium text-pine group-hover:underline">
+                  Read the guide →
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <div className="mt-6">
+          <DisclosureNote />
         </div>
       </section>
 
-      {/* --- What it actually costs (sage = numbers) --- */}
-      <section aria-labelledby="costs" className="mx-auto max-w-5xl px-5 py-12 sm:py-16">
-        <div className="rounded-xl bg-sage p-6 sm:p-10">
-          <h2 id="costs" className="text-3xl sm:text-4xl">
-            What it actually costs
+      {/* --- Why we're doing this (cream, one small blush accent) --- */}
+      {/* TODO(jonathan): approve story copy */}
+      <section aria-labelledby="why" className="mx-auto max-w-5xl px-5 pt-16 sm:pt-20">
+        <div className="prose-width">
+          <span
+            aria-hidden
+            className="inline-flex size-12 items-center justify-center rounded-full bg-blush font-heading text-4xl leading-none text-ink"
+          >
+            &ldquo;
+          </span>
+          <h2 id="why" className="mt-4 text-3xl sm:text-4xl">
+            Why we&apos;re doing this
           </h2>
-          <p className="mt-4 text-lg text-ink">
-            A full-time Boston nanny ({hours} hours a week, through an agency)
-            costs{" "}
-            <strong className="font-medium text-pine tabular-nums">{typicalAllIn}</strong>{" "}
-            in the first year, all-in
-            {allInPending.length > 0 &&
-              `, plus ${allInPending.join(" and ")} (TBD — collecting)`}
-            .
+          <p className="mt-4 font-heading text-2xl text-ink">We&apos;re Boston parents too.</p>
+          <p className="mt-4">
+            In our son&apos;s first year we did almost all of it: a night doula,
+            a nanny, then a scramble for daycare when our nanny had a family
+            emergency. We searched Facebook groups, asked every parent we knew,
+            and talked to agencies, and we still had no idea what was fair to
+            pay or what we&apos;d signed up for as employers.
           </p>
-          <dl className="mt-8 grid gap-4 sm:grid-cols-3">
-            <div className="rounded-lg bg-white p-5">
-              <dt className="eyebrow">Hourly rate</dt>
-              <dd className="mt-1 text-3xl font-medium text-pine tabular-nums">
-                {usdRange(hourlyAcrossSources)}
-              </dd>
-              <dd className="mt-2 text-sm text-muted-ink">
-                Asking rates · {hourlySourceNames}
-              </dd>
-            </div>
-            <div className="rounded-lg bg-white p-5">
-              <dt className="eyebrow">Employer taxes</dt>
-              <dd className="mt-1 text-3xl font-medium text-pine tabular-nums">
-                about {usdApprox(taxesKnown.mid)}/yr
-              </dd>
-              <dd className="mt-2 text-sm text-muted-ink">
-                Federal + MA paid leave · IRS Pub 926
-                {allInPending.length > 0 && "; MA unemployment TBD"}
-              </dd>
-            </div>
-            <div className="rounded-lg bg-white p-5">
-              <dt className="eyebrow">Agency fee, one time</dt>
-              <dd className="mt-1 text-3xl font-medium text-pine tabular-nums">
-                {agencyFeeRange ? usdApproxRange(agencyFeeRange) : "TBD"}
-              </dd>
-              <dd className="mt-2 text-sm text-muted-ink">
-                Published fees · {agencyFeeExamples.map((a) => a.agency).join(", ") || "Collecting"}
-              </dd>
-            </div>
-          </dl>
-          <p className="mt-6 text-[15px] text-ink">
-            Wages {usdRange(fullTimeExample.annualWages)} a year (
-            {fullTimeExample.hourlySources.map(shortSource).join(", ")}). Every
-            figure is sourced in the guide.
+          <p className="mt-4">
+            We started writing down what we learned so the next family
+            doesn&apos;t have to piece it together at 10pm. Everything here is
+            sourced, dated, and written for parents, not for agencies.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/boston/nanny-cost" className={buttonClass({ size: "lg" })}>
-              Read the full cost guide
-            </Link>
-            <Link href="/estimate" className={buttonClass({ variant: "outline", size: "lg" })}>
-              Estimate your cost
-            </Link>
-          </div>
+          <p className="mt-4 italic text-muted-ink">Jonathan &amp; Talia, Jamaica Plain</p>
         </div>
-        <div className="mt-8">
-          <DisclosureNote />
-        </div>
+      </section>
+
+      {/* --- Around Boston (from data/reading-list.json) --- */}
+      <section aria-labelledby="around-boston" className="mx-auto max-w-5xl px-5 py-16 sm:py-20">
+        <h2 id="around-boston" className="text-3xl sm:text-4xl">
+          Around Boston
+        </h2>
+        <p className="mt-2 text-muted-ink">We read these so you don&apos;t have to.</p>
+        <ul className="mt-6 divide-y divide-sand-light border-y border-sand-light">
+          {readingList.map((item) => (
+            <li key={item.url} className="py-5">
+              <a
+                href={item.url}
+                className="text-lg font-semibold text-ink underline decoration-sand underline-offset-4 hover:decoration-pine"
+                rel="noopener"
+                target="_blank"
+              >
+                {item.title}
+              </a>
+              <p className="mt-1 text-sm text-muted-ink">
+                {item.source} · {formatAsOf(item.date.slice(0, 7))}
+              </p>
+              <p className="prose-width mt-2">{item.takeaway}</p>
+            </li>
+          ))}
+        </ul>
       </section>
     </main>
   );

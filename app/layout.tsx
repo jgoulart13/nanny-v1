@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Figtree, Fraunces } from "next/font/google";
+import { Figtree, Newsreader } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { config, siteUrl } from "@/lib/config";
@@ -7,7 +7,13 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 
 // design.md: soft serif for H1/H2, clean light sans for body and UI.
-const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces" });
+// Headings: Newsreader, regular weight (design.md "Typography", 2026-11-17).
+const newsreader = Newsreader({
+  subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
+  variable: "--font-newsreader",
+});
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-figtree" });
 
 export const metadata: Metadata = {
@@ -24,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={cn("h-full antialiased", fraunces.variable, figtree.variable)}
+      className={cn("h-full antialiased", newsreader.variable, figtree.variable)}
     >
       <body className="flex min-h-full flex-col">
         <SiteHeader />
