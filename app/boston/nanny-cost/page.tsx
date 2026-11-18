@@ -32,10 +32,13 @@ const path = "/boston/nanny-cost";
 const title = "How much does a nanny cost in Boston? (2026)";
 const description = `Boston nanny asking rates run ${usdRange(hourlyAcrossSources)}/hr. All-in, a full-time nanny costs ${typicalAllIn} in the first year. Every source shown.`;
 
+// ON HOLD (step 02c): out of the nav, sitemap and all links, noindex. Its
+// content moves into /guides; this URL will redirect to
+// /guides/boston-nanny-cost once that guide is written. Don't delete.
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: path },
+  robots: { index: false, follow: true },
   openGraph: { title, description, type: "article", url: path },
 };
 

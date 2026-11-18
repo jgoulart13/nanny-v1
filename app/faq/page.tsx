@@ -32,19 +32,19 @@ export default function FaqPage() {
       <PageIntro
         eyebrow="Boston · Nanny costs"
         title="Frequently asked questions"
-        description="Straight answers about what a Boston nanny costs. Every number comes from a source listed in the cost guide."
+        description="Straight answers about what a Boston nanny costs. Every number comes from a dated, linked source."
       />
       <div className="mt-10">
         <FaqList items={costFaq} open headingLevel="h2" />
       </div>
       <p className="prose-width mt-10 text-[15px] text-muted-ink">
-        Sources and method:{" "}
-        <Link href="/boston/nanny-cost#sources" className="text-link">
-          Boston nanny cost guide
-        </Link>
-        . Your own numbers:{" "}
+        Every source, with its date:{" "}
         <Link href="/estimate" className="text-link">
           estimate your cost
+        </Link>{" "}
+        (sources are listed under the result). More detail:{" "}
+        <Link href="/guides" className="text-link">
+          our guides
         </Link>
         .
       </p>

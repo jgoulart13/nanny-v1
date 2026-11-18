@@ -70,9 +70,9 @@ export default function EstimatePage() {
       </section>
 
       <p className="prose-width mt-10 text-[15px] text-muted-ink">
-        How we calculate this, and every source in one place:{" "}
-        <Link href="/boston/nanny-cost" className="text-link">
-          the Boston nanny cost guide
+        The background behind these numbers:{" "}
+        <Link href="/guides" className="text-link">
+          our guides
         </Link>
         . Questions?{" "}
         <Link href="/faq" className="text-link">
