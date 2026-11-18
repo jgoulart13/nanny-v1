@@ -84,7 +84,7 @@ export default function StyleguidePage() {
       <Section title="Type">
         <div className="space-y-5">
           <p className="eyebrow">Eyebrow · Boston · 2026</p>
-          <p className="font-heading text-5xl text-ink">H1 · Fraunces, regular</p>
+          <p className="font-heading text-5xl text-ink">H1 · Newsreader, regular</p>
           <p className="font-heading text-3xl text-ink">H2 · What you’ll actually pay</p>
           <h3 className="text-xl">H3 · Figtree semibold</h3>
           <p className="prose-width">

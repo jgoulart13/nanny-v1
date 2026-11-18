@@ -42,7 +42,7 @@
 
   /* Fonts (loaded in app/layout.tsx) */
   --font-sans: var(--font-figtree);
-  --font-heading: var(--font-fraunces);
+  --font-heading: var(--font-newsreader);
 
   /* Radius: ~0.625rem on cards; buttons are pills (rounded-full) */
   --radius-sm: calc(var(--radius) * 0.6);
