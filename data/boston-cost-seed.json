@@ -173,11 +173,11 @@
       "unit": "pct_of_wages",
       "segment": "under_25_employees",
       "source_name": "Mass. DFML — PFML contribution rates",
-      "source_url": "https://www.mass.gov/info-details/employer-contribution-rates-and-calculator",
+      "source_url": "https://www.mass.gov/info-details/paid-family-and-medical-leave-employer-contribution-rates-and-calculator",
       "basis": "government_published",
       "as_of": "2026",
-      "confidence": "medium",
-      "notes": "Employers with fewer than 25 covered individuals remit 0.46% of eligible wages. TODO(jonathan): verify on mass.gov (it blocks automated checks). Split changes 1/1/2027."
+      "confidence": "high",
+      "notes": "Employers with fewer than 25 covered individuals send 0.46% of eligible wages (0.18% family + 0.28% medical). Verified on mass.gov 2026-11-17. The split changes 1/1/2027; the 0.46% total does not."
     },
     {
       "metric": "ma_pfml_employer_rate",
@@ -185,11 +185,11 @@
       "unit": "pct_of_wages",
       "segment": "under_25_employees",
       "source_name": "Mass. DFML — PFML contribution rates",
-      "source_url": "https://www.mass.gov/info-details/employer-contribution-rates-and-calculator",
+      "source_url": "https://www.mass.gov/info-details/paid-family-and-medical-leave-employer-contribution-rates-and-calculator",
       "basis": "government_published",
       "as_of": "2026",
-      "confidence": "medium",
-      "notes": "No employer share under 25 employees: the whole 0.46% may be withheld from the nanny's pay. TODO(jonathan): verify on mass.gov."
+      "confidence": "high",
+      "notes": "No employer share under 25 covered individuals: the whole 0.46% may be withheld from the nanny's pay. Verified on mass.gov 2026-11-17."
     },
     {
       "metric": "placement_fee",
