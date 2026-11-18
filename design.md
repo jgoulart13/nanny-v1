@@ -24,7 +24,7 @@ Soft colors are for **surfaces only**. Text and buttons always use ink or pine (
 | `sand` | #BDA58B | Borders, dividers, decorative only | Not for text (2.1:1) |
 | `sand-dark` | #7A6650 | Small labels and eyebrow text, if needed | 4.9:1 on cream |
 
-**Color roles (updated 2026-11-17, v2):** **Full-width color blocks are good.** The section below the hero is a **full-width sage band with cream cards inside**, the same layout as the original blush band with only the color swapped. Sage is the main block color for sections. **Blush is an accent only:** the hero wash, small tags, and an occasional quote. Never a full-width band. Blush is still a surface only, with ink text on top.
+**Color roles (updated 2026-11-17, v3, from Jonathan's review of the canvas):** the guide band below the hero ("The part no one prepares you for") is a **full-width blush band with cream cards inside**. Section tags: **sage** for "Why we're doing this" (contrast against the blush band above it). Sage is still the color for data and tools. Blush text is never used; ink text on both blush and sage.
 
 **shadcn variable mapping** (convert to the format shadcn's `globals.css` uses):
 `--background` cream · `--foreground` ink · `--primary` pine · `--primary-foreground` #FFFFFF · `--secondary` sage · `--secondary-foreground` ink · `--muted` #EFEAE1 · `--muted-foreground` muted-ink · `--accent` blue · `--accent-foreground` ink · `--card` #FFFFFF · `--card-foreground` ink · `--border` #E3DACB (light sand) · `--input` #E3DACB · `--ring` pine · `--destructive` #B4432F

@@ -11,7 +11,7 @@ Commit after each group.
 ## B. Home page
 Keep the hero exactly as it is (Jonathan likes it). Below the hero, the page becomes:
 0. **Remove the agency disclosure from the home page and footer** ("We don't take money from agencies… How we get paid"). Keep it only on `/how-it-works` and at the end of the agency-fees guide (CLAUDE.md rule 5, updated).
-1. **Guide band: keep the original layout and swap the color.** Keep the full-width band with three cream cards inside exactly as it is now; only change the band from `bg-blush` to `bg-sage`. Keep the heading "The part no one prepares you for." Each card links to a guide:
+1. **Guide band: keep the original layout and swap the color.** Keep the full-width band with three cream cards inside exactly as it is now; keep the band **blush** (Jonathan reversed this after reviewing the canvas; see `design.md` color roles v3). Keep the heading "The part no one prepares you for." Each card links to a guide:
    - "What agencies charge" → `/guides/nanny-agency-fees-boston`
    - "What Boston nannies earn" → `/guides/boston-nanny-wages`
    - "Nanny taxes in Massachusetts" → `/guides/massachusetts-nanny-taxes`
