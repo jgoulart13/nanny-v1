@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { PageIntro, PageShell } from "@/components/page-intro";
-import { DisclosureNote } from "@/components/disclosure-note";
 
 export const metadata: Metadata = {
   title: "Privacy",
@@ -15,9 +14,6 @@ export default function PrivacyPage() {
         title="Privacy"
         description="What we collect, why, and the named partner agencies we share it with, only with your consent. Full policy coming soon."
       />
-      <div className="mt-10">
-        <DisclosureNote />
-      </div>
     </PageShell>
   );
 }

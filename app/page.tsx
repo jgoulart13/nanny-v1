@@ -1,33 +1,60 @@
 import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/button";
-import { DisclosureNote } from "@/components/disclosure-note";
-import { readingList } from "@/lib/readingList";
-import { formatAsOf } from "@/lib/costData";
+import { readingList, readingListMonth } from "@/lib/readingList";
 import heroImage from "@/public/hero.webp";
+
+// Home page below the hero follows design-explorations/README.md:
+// artboard 11 (blush guide band, timeline + letter story) and option F
+// (the "Five things worth your 10pm" digest card).
 
 // design.md "Imagery": one hero image, no faces. Alt text is from design.md.
 const heroAlt =
   "A sunlit kitchen table with a coffee mug, a toddler's sippy cup and a notebook of handwritten numbers.";
 
-// Guide cards (sage = main section color, design.md 2026-11-17).
+// Guide band (blush, cream cards), copy from artboard 11.
 const guideCards = [
   {
-    title: "What agencies charge",
-    teaser: "Placement fees, minimums and what you get for them.",
+    title: "Trusting a stranger with your child",
+    teaser: "Agencies screen candidates, check references and stand behind a placement. Here's what that costs, and what you get for it.",
+    link: "What agencies charge",
     href: "/guides/nanny-agency-fees-boston",
   },
   {
-    title: "What Boston nannies earn",
-    teaser: "Hourly rates by arrangement, and why the numbers disagree.",
+    title: "Not knowing what's fair to pay",
+    teaser: "Public numbers disagree, and most are asking rates. We put the sources side by side so you can see the real range.",
+    link: "What Boston nannies earn",
     href: "/guides/boston-nanny-wages",
   },
   {
-    title: "Nanny taxes in Massachusetts",
-    teaser: "What changes the day you become a household employer.",
+    title: "Becoming an employer overnight",
+    teaser: "Hiring a nanny usually makes you a household employer, with taxes and paperwork you've never done before.",
+    link: "Nanny taxes in Massachusetts",
     href: "/guides/massachusetts-nanny-taxes",
   },
 ];
+
+// Story timeline, copy from artboard 11 (approved for v1, 2026-11-17).
+const timeline = [
+  { when: "First", what: "A night doula", detail: "Help through the newborn nights." },
+  { when: "Then", what: "A nanny", detail: "Found through a Facebook group, after a lot of interviews." },
+  { when: "Suddenly", what: "A family emergency", detail: "Our nanny had to step away, and we had no care." },
+  { when: "Next", what: "The daycare scramble", detail: "Tours, waitlists and a whole new set of prices." },
+  { when: "Now", what: "Writing it down", detail: "So the next family has it all in one place." },
+];
+
+/** Small rounded label above a section heading (blush or sage, ink text). */
+function SectionTag({ tone, children }: { tone: "blush" | "sage"; children: React.ReactNode }) {
+  return (
+    <span
+      className={`inline-block rounded-full px-2.5 py-0.5 text-[13px] font-medium text-ink ${
+        tone === "blush" ? "bg-blush" : "bg-sage"
+      }`}
+    >
+      {children}
+    </span>
+  );
+}
 
 export default function HomePage() {
   return (
@@ -78,86 +105,123 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* --- Guides (sage cards) --- */}
-      <section aria-labelledby="guides" className="mx-auto max-w-5xl px-5 pt-12 sm:pt-16">
-        <h2 id="guides" className="text-3xl sm:text-4xl">
-          The part no one prepares you for
-        </h2>
-        <ul className="mt-8 grid gap-4 md:grid-cols-3">
-          {guideCards.map((g) => (
-            <li key={g.href}>
-              <Link
-                href={g.href}
-                className="group flex h-full flex-col rounded-xl bg-sage p-6 ring-1 ring-transparent transition-shadow hover:ring-pine"
-              >
-                <h3 className="font-heading text-2xl font-normal">{g.title}</h3>
-                <p className="mt-2 flex-1 text-ink">{g.teaser}</p>
-                <span className="mt-5 font-medium text-pine group-hover:underline">
-                  Read the guide →
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <div className="mt-6">
-          <DisclosureNote />
-        </div>
-      </section>
-
-      {/* --- Why we're doing this (cream, one small blush accent) --- */}
-      {/* TODO(jonathan): approve story copy */}
-      <section aria-labelledby="why" className="mx-auto max-w-5xl px-5 pt-16 sm:pt-20">
-        <div className="prose-width">
-          <span
-            aria-hidden
-            className="inline-flex size-12 items-center justify-center rounded-full bg-blush font-heading text-4xl leading-none text-ink"
-          >
-            &ldquo;
-          </span>
-          <h2 id="why" className="mt-4 text-3xl sm:text-4xl">
-            Why we&apos;re doing this
+      {/* --- Guide band: full-width blush, cream cards (design.md color roles v3) --- */}
+      <section aria-labelledby="journey" className="bg-blush">
+        <div className="mx-auto max-w-5xl px-5 py-14 sm:py-18">
+          <h2 id="journey" className="text-3xl sm:text-4xl">
+            The part no one prepares you for
           </h2>
-          <p className="mt-4 font-heading text-2xl text-ink">We&apos;re Boston parents too.</p>
-          <p className="mt-4">
-            In our son&apos;s first year we did almost all of it: a night doula,
-            a nanny, then a scramble for daycare when our nanny had a family
-            emergency. We searched Facebook groups, asked every parent we knew,
-            and talked to agencies, and we still had no idea what was fair to
-            pay or what we&apos;d signed up for as employers.
-          </p>
-          <p className="mt-4">
-            We started writing down what we learned so the next family
-            doesn&apos;t have to piece it together at 10pm. Everything here is
-            sourced, dated, and written for parents, not for agencies.
-          </p>
-          <p className="mt-4 italic text-muted-ink">Jonathan &amp; Talia, Jamaica Plain</p>
+          <ul className="mt-8 grid gap-4 md:grid-cols-3">
+            {guideCards.map((g) => (
+              <li key={g.href} className="flex flex-col rounded-xl bg-cream p-7">
+                <h3 className="font-heading text-[22px] leading-snug font-normal">{g.title}</h3>
+                <p className="mt-2.5 flex-1 text-base">{g.teaser}</p>
+                <Link href={g.href} className="text-link mt-5 font-medium">
+                  {g.link} →
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* --- Around Boston (from data/reading-list.json) --- */}
-      <section aria-labelledby="around-boston" className="mx-auto max-w-5xl px-5 py-16 sm:py-20">
-        <h2 id="around-boston" className="text-3xl sm:text-4xl">
-          Around Boston
-        </h2>
-        <p className="mt-2 text-muted-ink">We read these so you don&apos;t have to.</p>
-        <ul className="mt-6 divide-y divide-sand-light border-y border-sand-light">
-          {readingList.map((item) => (
-            <li key={item.url} className="py-5">
-              <a
-                href={item.url}
-                className="text-lg font-semibold text-ink underline decoration-sand underline-offset-4 hover:decoration-pine"
-                rel="noopener"
-                target="_blank"
-              >
-                {item.title}
-              </a>
-              <p className="mt-1 text-sm text-muted-ink">
-                {item.source} · {formatAsOf(item.date.slice(0, 7))}
-              </p>
-              <p className="prose-width mt-2">{item.takeaway}</p>
-            </li>
-          ))}
-        </ul>
+      {/* --- Why we're doing this: timeline + letter card (artboard 11) --- */}
+      {/* TODO(jonathan): revisit story copy */}
+      <section aria-labelledby="story">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <SectionTag tone="sage">Why we&apos;re doing this</SectionTag>
+            <h2 id="story" className="mt-4 text-3xl leading-tight sm:text-[40px]">
+              Our first year, in five kinds of help
+            </h2>
+          </div>
+
+          <div className="relative mt-12">
+            <div aria-hidden className="absolute inset-x-0 top-[7px] hidden h-0.5 bg-sand-light sm:block" />
+            <ol className="relative grid gap-7 sm:grid-cols-5">
+              {timeline.map((t, i) => (
+                <li key={t.when} className="relative pt-7">
+                  <span
+                    aria-hidden
+                    className={`absolute top-0 left-0 size-3.5 rounded-full border-2 border-pine ${
+                      i === timeline.length - 1 ? "bg-pine" : "bg-blush"
+                    }`}
+                  />
+                  <p className="text-[13px] font-semibold tracking-[0.1em] text-sand-dark uppercase">{t.when}</p>
+                  <h3 className="mt-1.5 font-heading text-[22px] font-normal">{t.what}</h3>
+                  <p className="mt-1.5 text-[15px]">{t.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <div className="mx-auto mt-14 max-w-[680px] rounded-[18px] border border-sand-light bg-white px-6 py-10 sm:px-13 sm:pt-12 sm:pb-11">
+            <h3 className="font-heading text-[30px] leading-tight font-normal">We&apos;re Boston parents too.</h3>
+            <p className="mt-4 text-lg">
+              We searched Facebook groups, asked every parent we knew, and
+              talked to agencies, and we still had no idea what was fair to pay
+              or what we&apos;d signed up for as employers.
+            </p>
+            <p className="mt-3.5 text-lg">
+              So we started writing down what we learned, so the next family
+              doesn&apos;t have to piece it together at 10pm. Everything here is
+              sourced, dated, and written for parents, not for agencies.
+            </p>
+            <div className="mt-7 flex flex-wrap items-baseline justify-between gap-3">
+              <p className="font-heading text-[21px] italic">Jonathan &amp; Talia · Jamaica Plain</p>
+              <Link href="/how-it-works#our-story" className="text-link font-medium">
+                Read our story →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- Around Boston: digest card, option F (from data/reading-list.json) --- */}
+      <section aria-labelledby="around-boston" className="border-t border-sand-light">
+        <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
+          <div className="mx-auto max-w-3xl text-center">
+            <SectionTag tone="blush">Around Boston · {readingListMonth}</SectionTag>
+            <h2 id="around-boston" className="mt-4 text-3xl leading-tight sm:text-[40px]">
+              Five things worth your 10pm
+            </h2>
+            <p className="mt-3 text-muted-ink">
+              Useful things we&apos;ve found, with the takeaway in our own words.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-10 max-w-[820px] rounded-[18px] border border-sand-light bg-white px-5 pt-6 pb-9 sm:px-12">
+            <ol>
+              {readingList.slice(0, 5).map((item, i) => (
+                <li key={item.url} className="flex gap-4 border-t border-sand-light py-5 first:border-t-0 sm:gap-5">
+                  <span aria-hidden className="shrink-0 font-heading text-[34px] leading-none text-pine tabular-nums">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="min-w-0">
+                    <SectionTag tone="sage">{item.topic}</SectionTag>
+                    <a
+                      href={item.url}
+                      className="mt-2 block font-semibold text-ink underline decoration-sand underline-offset-4 hover:decoration-pine"
+                      rel="noopener"
+                      target="_blank"
+                    >
+                      {item.title}
+                    </a>
+                    <p className="mt-1 text-base">
+                      {item.takeaway} <span className="text-muted-ink">· {item.source}</span>
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-5 font-heading text-[19px] italic">— Jonathan &amp; Talia</p>
+          </div>
+          <p className="mt-7 text-center">
+            <Link href="/guides" className="text-link font-medium">
+              See everything we&apos;ve found →
+            </Link>
+          </p>
+        </div>
       </section>
     </main>
   );
