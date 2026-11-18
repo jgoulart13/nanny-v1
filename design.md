@@ -24,7 +24,7 @@ Soft colors are for **surfaces only**. Text and buttons always use ink or pine (
 | `sand` | #BDA58B | Borders, dividers, decorative only | Not for text (2.1:1) |
 | `sand-dark` | #7A6650 | Small labels and eyebrow text, if needed | 4.9:1 on cream |
 
-**Color roles (updated 2026-11-17):** **sage is the main section color** (content cards, guide cards, data, tools). **Blush is an accent only:** the soft wash behind the home hero, small tags, and an occasional quote callout. Never a full-width section background (Jonathan found the blush section below the hero jarring). Blush is still a surface only, with ink text on top.
+**Color roles (updated 2026-11-17, v2):** **Full-width color blocks are good.** The section below the hero is a **full-width sage band with cream cards inside**, the same layout as the original blush band with only the color swapped. Sage is the main block color for sections. **Blush is an accent only:** the hero wash, small tags, and an occasional quote. Never a full-width band. Blush is still a surface only, with ink text on top.
 
 **shadcn variable mapping** (convert to the format shadcn's `globals.css` uses):
 `--background` cream · `--foreground` ink · `--primary` pine · `--primary-foreground` #FFFFFF · `--secondary` sage · `--secondary-foreground` ink · `--muted` #EFEAE1 · `--muted-foreground` muted-ink · `--accent` blue · `--accent-foreground` ink · `--card` #FFFFFF · `--card-foreground` ink · `--border` #E3DACB (light sand) · `--input` #E3DACB · `--ring` pine · `--destructive` #B4432F
@@ -55,7 +55,7 @@ No dark mode in v1.
 | **Source table** | Plain rows, sand dividers, tabular numbers, a confidence badge (blue = medium, sage = high, blush = low) |
 | **Estimator** | A sage card on cream with inputs on the left and a live result on the right (stacked on mobile). Shows "TBD — collecting" in muted-ink italics when data is missing |
 | **Brief form** | One step per screen, a thin progress bar in pine, large radio cards instead of dropdowns where possible |
-| **Disclosure note** | A small blue box: "How we get paid →". Always visible near agency mentions |
+| **Disclosure note** | A small blue box: "How we get paid →". Only on `/how-it-works` and the agency-fees guide |
 | **Opt-in** | A blush card at the end of the brief: "Keep my profile for next time" |
 
 ## Imagery

@@ -10,13 +10,14 @@ Commit after each group.
 
 ## B. Home page
 Keep the hero exactly as it is (Jonathan likes it). Below the hero, the page becomes:
-1. **Guide cards (sage, not blush).** Restyle the three journey cards in `secondary`/sage. Each card is a link to a guide:
+0. **Remove the agency disclosure from the home page and footer** ("We don't take money from agencies… How we get paid"). Keep it only on `/how-it-works` and at the end of the agency-fees guide (CLAUDE.md rule 5, updated).
+1. **Guide band: keep the original layout and swap the color.** Keep the full-width band with three cream cards inside exactly as it is now; only change the band from `bg-blush` to `bg-sage`. Keep the heading "The part no one prepares you for." Each card links to a guide:
    - "What agencies charge" → `/guides/nanny-agency-fees-boston`
    - "What Boston nannies earn" → `/guides/boston-nanny-wages`
    - "Nanny taxes in Massachusetts" → `/guides/massachusetts-nanny-taxes`
    Each card: a short title, a one-line teaser, and "Read the guide →".
 2. **Remove** the "What it actually costs" section (numbers and calculator) from the home page entirely.
-3. **"Why we're doing this"**: a short story section on cream with one small blush accent (a quote mark or tag, not a full blush background). Use the draft copy below, marked `TODO(jonathan): approve story copy`.
+3. **"Why we're doing this"**: build the design Jonathan picks from `design-explorations/` (see `design-explorations/README.md` for his choice). If no choice is recorded yet, use a simple version on cream and mark it `TODO(jonathan): story design pending`. Use the draft copy below, marked `TODO(jonathan): approve story copy`.
 4. **"Around Boston"**: a curated list of 4–6 useful childcare links, rendered from `data/reading-list.json` (create it). Each item has: title, source name, URL, date, and a one-line takeaway **in our own words** (never copied text). Seed it with the items below. A small "We read these so you don't have to" intro. Server-rendered.
 5. Hero buttons: primary **"Read the guides"** → `/guides`; secondary **"Estimate your cost"** → `/estimate`.
 
@@ -49,7 +50,7 @@ Verify each URL loads before publishing; replace any that don't.
 
 ## Acceptance
 - [ ] No Fraunces anywhere; headings render in Newsreader.
-- [ ] Home page: hero unchanged → sage guide cards → story → Around Boston. No cost numbers or calculator, and no full-width blush sections.
+- [ ] Home page: hero unchanged → **full-width sage band** with cream guide cards → story → Around Boston. No cost numbers, calculator or agency disclosure on the page or in the footer.
 - [ ] `/guides` lists the 3 guides; each guide page renders the layout with sources and is `noindex` until drafted.
 - [ ] Nav shows Guides · Estimate · FAQ · About. `/boston/nanny-cost` is noindex and unlinked.
 - [ ] `npm run build` and tests pass. Show Jonathan `/`, `/guides`, one guide page, `/styleguide`.
