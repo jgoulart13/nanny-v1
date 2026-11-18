@@ -7,6 +7,7 @@
 > - `/faq` is its own page (it already exists); the cost page links to it rather than embedding the full FAQ.
 > - `/brief` and `/for-agencies` stay in the code but are **hidden**: no nav, footer or CTA links, `noindex`, excluded from the sitemap. Nothing says "Get matched" or "vetted agencies" anywhere on the public site.
 > - New demand signal replacing the brief (H5/H6): on `/estimate`, an optional **"Email me this estimate"** form (email + estimate inputs only) with an unchecked box: *"I'd also like help finding care when the time comes."* Store in a `leads` table; sending the email can wait for Resend (step 05).
+> - **Update 2026-11-17:** content lives under **/guides** ("Guides" in the nav). The home page has no cost numbers or calculator. `/boston/nanny-cost` is on hold (out of the nav, `noindex`) until it's redone; its content moves into guides. `/estimate` stays in the nav as-is; it gets a proper product interface later. See `prompts/02c-home-and-guides.md`.
 > - Steps 03 (brief) and 05 (concierge ops) are **paused** until gate G0 passes. Step 03 will be rewritten as "estimate save + leads."
 
 ## Goal

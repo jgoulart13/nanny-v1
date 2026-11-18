@@ -24,14 +24,14 @@ Soft colors are for **surfaces only**. Text and buttons always use ink or pine (
 | `sand` | #BDA58B | Borders, dividers, decorative only | Not for text (2.1:1) |
 | `sand-dark` | #7A6650 | Small labels and eyebrow text, if needed | 4.9:1 on cream |
 
-**Color roles (updated 2026-11-15):** **sage = tools and numbers** (estimator, data tables, result cards). **blush = people and feelings** (the home page's emotional journey section, parent quotes, "you're not alone" notes, the "Email me this estimate" card, and the soft wash behind the home hero). Blush is still a surface only, with ink text on top (9.4:1). Aim for blush showing up on most pages, never on buttons or text.
+**Color roles (updated 2026-11-17):** **sage is the main section color** (content cards, guide cards, data, tools). **Blush is an accent only:** the soft wash behind the home hero, small tags, and an occasional quote callout. Never a full-width section background (Jonathan found the blush section below the hero jarring). Blush is still a surface only, with ink text on top.
 
 **shadcn variable mapping** (convert to the format shadcn's `globals.css` uses):
 `--background` cream · `--foreground` ink · `--primary` pine · `--primary-foreground` #FFFFFF · `--secondary` sage · `--secondary-foreground` ink · `--muted` #EFEAE1 · `--muted-foreground` muted-ink · `--accent` blue · `--accent-foreground` ink · `--card` #FFFFFF · `--card-foreground` ink · `--border` #E3DACB (light sand) · `--input` #E3DACB · `--ring` pine · `--destructive` #B4432F
 No dark mode in v1.
 
 ## Typography
-- **Headings:** a soft serif for H1 and H2, warm like the Little Dutch wordmark and credible like Wirecutter. Suggestion: *Fraunces* (Google Fonts), regular weight, never bold-heavy.
+- **Headings:** a soft serif for H1 and H2, warm like the Little Dutch wordmark and credible like Wirecutter. **Use *Newsreader* (Google Fonts), regular weight, never bold-heavy.** (Changed 2026-11-17: Fraunces' large hooked 'f' and ball terminals were distracting at headline sizes. Newsreader is calmer and more editorial.)
 - **Body and UI:** a clean, light geometric sans like Mushie's. Suggestion: *Figtree* (Google Fonts).
 - **Numbers:** sans with **tabular figures** (`font-variant-numeric: tabular-nums`) so cost columns line up. Hero figures are large (40–56px), in pine.
 - Eyebrow labels (e.g., "BOSTON · 2026"): small uppercase with letter-spacing, in muted-ink. This is borrowed from Mushie.

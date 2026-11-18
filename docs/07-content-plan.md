@@ -3,6 +3,8 @@
 **Decided 2026-11-15:** v1 leads with cost content, not matching. The guides are the asset that AI assistants find and cite. The estimator is a product built on top of them. "Get matched" stays hidden until the agency gate (G0) passes.
 
 ## Site structure
+> **Updated 2026-11-17:** guides live at `/guides/[slug]`. The first three are **agency fees**, **wages** and **MA nanny taxes**, which the home page cards link to. The pillar ("How much does a nanny cost in Boston?") becomes `/guides/boston-nanny-cost` once written; `/boston/nanny-cost` will redirect there. The original plan is below for reference.
+
 ```
 /                                  Home: the emotional journey + "See what it costs"
 /boston/nanny-cost                 PILLAR GUIDE (keep this URL; it's the AEO target)
