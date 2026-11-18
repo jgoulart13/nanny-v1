@@ -285,25 +285,26 @@ function Row({
   strong?: boolean;
   indent?: boolean;
 }) {
+  // Valid <dl> structure: <div> groups holding exactly one <dt> and one <dd>.
   return (
-    <div className={`py-2 ${indent ? "pl-4" : ""}`}>
-      <div className="flex items-baseline justify-between gap-4">
-        <dt className={strong ? "font-semibold text-ink" : "text-ink"}>{label}</dt>
-        <dd className="text-right whitespace-nowrap tabular-nums">
-          {value === "not_applicable" ? (
-            <span className="text-muted-ink">Not applicable</span>
-          ) : isTbd(value) ? (
-            <span className="italic text-muted-ink" title={value.reason}>
-              TBD — collecting
-            </span>
-          ) : (
-            <span className={strong ? "font-semibold text-pine" : "text-ink"}>
-              {usdRange(value)}
-            </span>
-          )}
-        </dd>
-      </div>
-      {note && <p className="mt-0.5 text-sm text-muted-ink">{note}</p>}
+    <div className={`grid grid-cols-[1fr_auto] items-baseline gap-x-4 py-2 ${indent ? "pl-4" : ""}`}>
+      <dt className={strong ? "font-semibold text-ink" : "text-ink"}>
+        {label}
+        {note && <span className="mt-0.5 block text-sm font-normal text-muted-ink">{note}</span>}
+      </dt>
+      <dd className="text-right whitespace-nowrap tabular-nums">
+        {value === "not_applicable" ? (
+          <span className="text-muted-ink">Not applicable</span>
+        ) : isTbd(value) ? (
+          <span className="italic text-muted-ink" title={value.reason}>
+            TBD — collecting
+          </span>
+        ) : (
+          <span className={strong ? "font-semibold text-pine" : "text-ink"}>
+            {usdRange(value)}
+          </span>
+        )}
+      </dd>
     </div>
   );
 }

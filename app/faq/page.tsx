@@ -35,7 +35,7 @@ export default function FaqPage() {
         description="Straight answers about what a Boston nanny costs. Every number comes from a source listed in the cost guide."
       />
       <div className="mt-10">
-        <FaqList items={costFaq} open />
+        <FaqList items={costFaq} open headingLevel="h2" />
       </div>
       <p className="prose-width mt-10 text-[15px] text-muted-ink">
         Sources and method:{" "}
