@@ -1,4 +1,4 @@
-# Step 02e — Home page copy pass (shorter, warmer) + daycare card
+# Step 02e — Home page copy pass (shorter, warmer) + daycare card + logo
 
 Talia's feedback: the home page was wordy and heady. Jonathan approved a streamlined version on **artboard 11** of the canvas (https://claude.ai/artifact/SPVJkBh5CkvcASqc95Aqy4). Change **copy only**, plus one new card and one new guide stub. The layout stays as it is.
 
@@ -38,8 +38,15 @@ Create the 4th guide stub `content/guides/nanny-vs-daycare-boston.mdx` the same 
 ## D. Around Boston
 - Keep "Five things worth your 10pm." Change the subline to **Quick reads, in plain English.**
 
+## E. Logo
+- Header: the goose + gosling mark (`public/brand/silly-goose-mark.svg`, ~45px tall, about 64px wide) to the left of the "silly goose" wordmark, both inside the home link (`aria-label="Silly Goose home"`; the svg is decorative, `alt=""`).
+- Footer: the same lockup, smaller (~34px tall).
+- Browser-tab icon: use `public/brand/silly-goose-icon.svg` as the site icon (Next 16 app icon conventions; check the docs in `node_modules/next/dist/docs/`). Also generate a 180px PNG apple-touch icon from it if the docs recommend one.
+- Social preview (Open Graph) can wait; add a `BACKLOG.md` line.
+
 ## Acceptance
 - [ ] `/` matches artboard 11's copy exactly; no other text on the page changed.
 - [ ] The 4 cards wrap correctly at desktop, tablet and phone widths.
 - [ ] `/guides` lists 4 guides; the new stub is noindex.
+- [ ] The header and footer show the goose mark beside the wordmark; the browser tab shows the sage goose icon.
 - [ ] `npm run build` and tests pass.
