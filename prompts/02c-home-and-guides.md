@@ -17,7 +17,7 @@ Keep the hero exactly as it is (Jonathan likes it). Below the hero, the page bec
    - "Nanny taxes in Massachusetts" → `/guides/massachusetts-nanny-taxes`
    Each card: a short title, a one-line teaser, and "Read the guide →".
 2. **Remove** the "What it actually costs" section (numbers and calculator) from the home page entirely.
-3. **"Why we're doing this"**: build **artboard 11 · Combined** exactly as specified in `design-explorations/README.md` (timeline + letter card + "Read our story →"). Add an `#our-story` section to `/how-it-works` with the full story copy below. Copy is marked `TODO(jonathan): approve story copy`.
+3. **"Why we're doing this"**: build **artboard 11 · Combined** exactly as specified in `design-explorations/README.md` (timeline + letter card + "Read our story →"). Add an `#our-story` section to `/how-it-works` with the full story copy below. Story copy is **approved for v1** (Jonathan, 2026-11-17). Use it exactly as written below and on artboard 11; he'll revise it later. Leave a single `TODO(jonathan): revisit story copy` comment in the component.
 4. **"Around Boston"**: render as specified in `design-explorations/README.md` ("Five things worth your 10pm" **digest card, option F**) from `data/reading-list.json` (create it). Each item has: title, source name, URL, date, topic tag, and a one-line takeaway **in our own words** (never copied text). Seed it with the items below. Server-rendered. Show the first 5; the "See everything" link can point to `/guides` for now.
 5. Hero buttons: primary **"Read the guides"** → `/guides`; secondary **"Estimate your cost"** → `/estimate`.
 

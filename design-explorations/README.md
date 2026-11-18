@@ -12,3 +12,5 @@ Every option keeps the hero and the full-width sage band fixed; only the "Why we
 - **Update (21:40):** guide band = **blush** (full width); the "Why we're doing this" tag = **sage**. Layout for "Five things worth your 10pm": **option F, the digest card** (chosen 21:43). Centered blush tag "Around Boston · November" → heading → subline → **one white card** (max ~820px, 18px radius, sand-light border) holding a **numbered list of 5** (01–05 in large pine serif, sage topic tag, bold title link, takeaway + source in muted ink, thin dividers) → signed "— Jonathan & Talia" in italic serif → centered "See everything we've found →".
 
 Step 02c builds whatever is recorded here.
+
+**Brand:** Silly Goose (wordmark: lowercase "silly goose"). **Story copy:** approved for v1 as shown on artboard 11 (2026-11-17).
