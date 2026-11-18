@@ -21,7 +21,6 @@ import {
   shortSource,
 } from "@/lib/costFacts";
 import { defaultInputs, usd, usdRange } from "@/lib/estimator";
-import { disclosureHref } from "@/lib/routes";
 
 const path = "/boston/nanny-cost";
 const title = "How much does a nanny cost in Boston?";
@@ -111,12 +110,9 @@ export default function NannyCostPage() {
           <a href="#sources" className="text-link">All sources ↓</a>
         </p>
         <div className="mt-6">
-          <Link href="/brief" className={buttonClass({ size: "lg" })}>
-            Get matched with vetted agencies →
+          <Link href="/estimate" className={buttonClass({ size: "lg" })}>
+            Estimate your all-in cost →
           </Link>
-          <p className="mt-3 text-sm text-muted-ink">
-            Free for families. <Link href={disclosureHref} className="text-link">How we get paid</Link>
-          </p>
         </div>
       </section>
 
@@ -270,17 +266,13 @@ export default function NannyCostPage() {
           </li>
         </ul>
         <div className="mt-8 rounded-xl bg-sage p-6">
-          <p className="font-heading text-2xl text-ink">Want real quotes instead of asking rates?</p>
+          <p className="font-heading text-2xl text-ink">What would it cost your family?</p>
           <p className="mt-2">
-            Tell us what you need and we&apos;ll send it to up to three vetted
-            Boston agencies.
+            Put in your hours and your kids&apos; ages to see your own all-in range.
           </p>
-          <Link href="/brief" className={`${buttonClass({ size: "lg" })} mt-5`}>
-            Get matched with vetted agencies →
+          <Link href="/estimate" className={`${buttonClass({ size: "lg" })} mt-5`}>
+            Estimate your all-in cost →
           </Link>
-          <p className="mt-3 text-sm text-ink/80">
-            <Link href={disclosureHref} className="text-link">How we get paid</Link>
-          </p>
         </div>
       </section>
     </PageShell>

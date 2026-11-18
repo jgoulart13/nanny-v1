@@ -4,7 +4,7 @@ import { disclosureHref } from "@/lib/routes";
 // design.md: a small blue box, always visible near any mention of agencies.
 // CLAUDE.md rule 5: it must link to /how-it-works#how-we-get-paid.
 export function DisclosureNote({
-  children = "Partner agencies may pay us when they work with a family we introduce. We always disclose it.",
+  children = "We don’t take money from agencies. If that ever changes, we’ll say so here first.",
 }: {
   children?: React.ReactNode;
 }) {

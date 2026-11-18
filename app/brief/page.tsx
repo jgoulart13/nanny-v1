@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { PageIntro, PageShell } from "@/components/page-intro";
 import { DisclosureNote } from "@/components/disclosure-note";
 
+// HIDDEN (scope change 2026-11-15): not linked, noindex, not in the sitemap.
 export const metadata: Metadata = {
+  robots: { index: false, follow: false },
   title: "Tell us what you need",
   description:
     "A short brief about your family's nanny needs, shared with up to three partner agencies only with your consent.",
@@ -13,7 +15,7 @@ export default function BriefPage() {
   return (
     <PageShell>
       <PageIntro
-        eyebrow="Get matched"
+        eyebrow="Coming later"
         title="Tell us what you need"
         description="A short brief about your nanny needs. With your consent, we share it with up to three partner agencies. Coming soon."
       />

@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { PageIntro, PageShell } from "@/components/page-intro";
 import { DisclosureNote } from "@/components/disclosure-note";
 
+// HIDDEN (scope change 2026-11-15): not linked, noindex, not in the sitemap.
 export const metadata: Metadata = {
+  robots: { index: false, follow: false },
   title: "For agencies",
   description:
     "Boston nanny agencies: apply to receive qualified family briefs.",

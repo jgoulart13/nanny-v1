@@ -102,7 +102,7 @@ export default function StyleguidePage() {
 
       <Section title="Buttons">
         <div className="flex flex-wrap items-center gap-3">
-          <Button>Get matched</Button>
+          <Button>See what it costs</Button>
           <Button variant="outline">See what it costs</Button>
           <Button size="lg">Large primary</Button>
           <Link href="/styleguide" className={buttonClass({ variant: "outline", size: "lg" })}>

@@ -9,22 +9,21 @@ export default function HomePage() {
       <div className="prose-width">
         <p className="eyebrow mb-3">Boston · Nannies</p>
         <h1 className="text-4xl leading-tight sm:text-6xl">
-          Find a great Boston nanny through trusted agencies, and know what you
-          should pay.
+          Know what a Boston nanny really costs.
         </h1>
         <p className="mt-5 text-lg text-muted-ink">
-          We work for your family: honest all-in costs, then a short brief we
-          send to a few vetted agencies on your behalf.
+          Honest, sourced numbers for what a Boston nanny really costs:
+          wages, employer taxes and agency fees.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/brief" className={buttonClass({ size: "lg" })}>
-            Get matched
+          <Link href="/boston/nanny-cost" className={buttonClass({ size: "lg" })}>
+            See what it costs
           </Link>
           <Link
-            href="/boston/nanny-cost"
+            href="/estimate"
             className={buttonClass({ variant: "outline", size: "lg" })}
           >
-            See what it costs
+            Estimate your cost
           </Link>
         </div>
       </div>
