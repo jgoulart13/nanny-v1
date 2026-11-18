@@ -18,7 +18,7 @@ Keep the hero exactly as it is (Jonathan likes it). Below the hero, the page bec
    Each card: a short title, a one-line teaser, and "Read the guide →".
 2. **Remove** the "What it actually costs" section (numbers and calculator) from the home page entirely.
 3. **"Why we're doing this"**: build **artboard 11 · Combined** exactly as specified in `design-explorations/README.md` (timeline + letter card + "Read our story →"). Add an `#our-story` section to `/how-it-works` with the full story copy below. Copy is marked `TODO(jonathan): approve story copy`.
-4. **"Around Boston"**: render as specified in `design-explorations/README.md` ("Five things worth your 10pm" cards) from `data/reading-list.json` (create it). Each item has: title, source name, URL, date, topic tag, and a one-line takeaway **in our own words** (never copied text). Seed it with the items below. Server-rendered. Show the first 5; the "See everything" link can point to `/guides` for now.
+4. **"Around Boston"**: render as specified in `design-explorations/README.md` ("Five things worth your 10pm" **digest card, option F**) from `data/reading-list.json` (create it). Each item has: title, source name, URL, date, topic tag, and a one-line takeaway **in our own words** (never copied text). Seed it with the items below. Server-rendered. Show the first 5; the "See everything" link can point to `/guides` for now.
 5. Hero buttons: primary **"Read the guides"** → `/guides`; secondary **"Estimate your cost"** → `/estimate`.
 
 ## C. Guides section
