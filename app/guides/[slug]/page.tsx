@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buttonClass } from "@/components/ui/button";
@@ -28,7 +29,18 @@ export async function generateMetadata({
   };
 }
 
-export default async function GuidePage({ params }: PageProps<"/guides/[slug]">) {
+// The slug is read inside <Suspense> so navigations stay instant (Next 16
+// "instant navigation" check). Every slug is pre-rendered by
+// generateStaticParams, so the full guide is still in the server HTML.
+export default function GuidePage({ params }: PageProps<"/guides/[slug]">) {
+  return (
+    <Suspense fallback={<PageShell><p className="text-muted-ink">Loading guide…</p></PageShell>}>
+      <GuideBody params={params} />
+    </Suspense>
+  );
+}
+
+async function GuideBody({ params }: { params: PageProps<"/guides/[slug]">["params"] }) {
   const { slug } = await params;
   if (!isGuideSlug(slug)) notFound();
   const guide = await getGuide(slug);
