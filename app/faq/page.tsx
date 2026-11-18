@@ -1,20 +1,53 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { FaqList } from "@/components/cost/faq-list";
+import { JsonLd } from "@/components/json-ld";
 import { PageIntro, PageShell } from "@/components/page-intro";
+import { siteUrl } from "@/lib/config";
+import { costFaq } from "@/lib/costFacts";
 
 export const metadata: Metadata = {
-  title: "Frequently asked questions",
+  title: "Boston nanny cost FAQ",
   description:
-    "Straight answers about Boston nanny costs, taxes, agencies vs. independent nannies, and nanny shares.",
+    "Straight answers about Boston nanny costs: hourly rates, yearly cost, employer taxes, agency fees, nanny shares and daycare.",
+  alternates: { canonical: "/faq" },
 };
 
-// Stub — real Q&As arrive in a later step.
+// The one full FAQ on the site. FAQPage JSON-LD lives here only.
 export default function FaqPage() {
   return (
     <PageShell>
-      <PageIntro
-        title="Frequently asked questions"
-        description="Straight answers about nanny costs, taxes, agencies vs. independent nannies, and nanny shares. Coming soon."
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "@id": `${siteUrl}/faq#faq`,
+          mainEntity: costFaq.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
+        }}
       />
+      <PageIntro
+        eyebrow="Boston · Nanny costs"
+        title="Frequently asked questions"
+        description="Straight answers about what a Boston nanny costs. Every number comes from a source listed in the cost guide."
+      />
+      <div className="mt-10">
+        <FaqList items={costFaq} open />
+      </div>
+      <p className="prose-width mt-10 text-[15px] text-muted-ink">
+        Sources and method:{" "}
+        <Link href="/boston/nanny-cost#sources" className="text-link">
+          Boston nanny cost guide
+        </Link>
+        . Your own numbers:{" "}
+        <Link href="/estimate" className="text-link">
+          estimate your cost
+        </Link>
+        .
+      </p>
     </PageShell>
   );
 }

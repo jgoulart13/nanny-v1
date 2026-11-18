@@ -2,13 +2,15 @@
 // The nanny cost estimator. A pure function: same inputs → same outputs,
 // no network, no database. Every number it returns is either
 //   (a) taken from data/boston-cost-seed.json, or
-//   (b) simple arithmetic on (a) (rate × hours × weeks),
+//   (b) simple arithmetic on (a) (rate × hours × weeks, tax rate × wages,
+//       agency % × wages),
 // and anything we don't know yet comes back as TBD, never a guess.
 
 import { z } from "zod";
 import {
   costData,
   pointsFor,
+  requirePoint,
   type CostModel,
   type DataPoint,
 } from "@/lib/costData";
@@ -61,6 +63,32 @@ export type Range = { low: number; mid: number; high: number };
 /** A figure we can't calculate honestly yet. Render as "TBD — collecting". */
 export type Tbd = { tbd: true; reason: string };
 
+/** One line of a breakdown, e.g. "Social Security & Medicare (your share)". */
+export type Line = {
+  key: string;
+  label: string;
+  value: Range | Tbd;
+  /** Short plain-English note, e.g. "7.65% of wages". */
+  note?: string;
+  sources: DataPoint[];
+};
+
+/** A total built from lines. `known` adds up only the lines we can calculate. */
+export type Breakdown = {
+  lines: Line[];
+  known: Range;
+  /** Labels of lines that are still TBD. Empty = the total is complete. */
+  pending: string[];
+};
+
+export type AgencyFee = {
+  agency: string;
+  fee: Range;
+  /** e.g. "18% of first-year pay (min $7,500) + $500 engagement fee" */
+  formula: string;
+  sources: DataPoint[];
+};
+
 export type Estimate = {
   /** Which group of data points the hourly range came from. */
   segment: "newborn" | "part_time" | "general";
@@ -68,14 +96,17 @@ export type Estimate = {
   weekly: Range;
   /** Gross wages for a year (52 weeks). */
   annualWages: Range;
-  employerTaxes: Range | Tbd;
-  /** "not_applicable" when hiring independently. */
-  placementFee: Range | Tbd | "not_applicable";
+  /** Employer taxes in the first year, line by line. */
+  employerTaxes: Breakdown;
+  /** One-time agency fees, across the agencies that publish them. */
+  placementFee: { range: Range; byAgency: AgencyFee[] } | Tbd | "not_applicable";
   /** Nanny share only: what one family pays per hour. */
   familyShareHourly: Range | Tbd | "not_applicable";
-  /** Wages + employer taxes + placement fee. TBD if any piece is unknown. */
-  annualAllIn: Range | Tbd;
-  /** The data points the hourly range is built from. */
+  /** First-year total: wages + employer taxes + agency fee. */
+  annualAllIn: { known: Range; pending: string[] };
+  /** Data points behind the hourly rate. */
+  hourlySources: DataPoint[];
+  /** Every data point used anywhere in this estimate. */
   sources: DataPoint[];
   /** Plain-English notes about what's not included. */
   caveats: string[];
@@ -89,6 +120,8 @@ const GENERAL_SEGMENTS = ["all", "child_care_provider"];
 export function isTbd(x: unknown): x is Tbd {
   return typeof x === "object" && x !== null && "tbd" in x;
 }
+
+const ZERO: Range = { low: 0, mid: 0, high: 0 };
 
 // --- The estimator -----------------------------------------------------------
 
@@ -108,25 +141,25 @@ export function estimate(
         : "general";
 
   let segment = wanted;
-  let sources =
+  let hourlySources =
     wanted === "general"
       ? pointsFor(model, "hourly_rate_avg", GENERAL_SEGMENTS)
       : pointsFor(model, "hourly_rate_avg", [wanted]);
 
-  if (sources.length === 0) {
+  if (hourlySources.length === 0) {
     segment = "general";
-    sources = pointsFor(model, "hourly_rate_avg", GENERAL_SEGMENTS);
+    hourlySources = pointsFor(model, "hourly_rate_avg", GENERAL_SEGMENTS);
     caveats.push(
       `We don't have ${wanted.replace("_", "-")} rates yet, so this uses general Boston rates.`,
     );
   }
-  if (sources.length === 0) {
+  if (hourlySources.length === 0) {
     throw new Error("Cost data has no hourly_rate_avg data points.");
   }
 
   // 2. Hourly range: lowest, median and highest across sources.
-  const hourly = rangeOf(sources.map((p) => p.value));
-  if (sources.length === 1) {
+  const hourly = rangeOf(hourlySources.map((p) => p.value));
+  if (hourlySources.length === 1) {
     caveats.push("This hourly rate comes from a single source.");
   }
 
@@ -134,28 +167,13 @@ export function estimate(
   const weekly = scale(hourly, inputs.hoursPerWeek);
   const annualWages = scale(weekly, WEEKS_PER_YEAR);
 
-  // 4. Employer taxes: only if the rate is known.
-  const taxRate = model.assumptions.employer_tax_rate_estimate.value;
-  const employerTaxes: Range | Tbd =
-    taxRate === null
-      ? {
-          tbd: true,
-          reason:
-            "We're verifying 2026 federal and Massachusetts household employer taxes.",
-        }
-      : scale(annualWages, taxRate);
+  // 4. Employer taxes, line by line (IRS Pub 926 + Mass. DFML).
+  const employerTaxes = employerTaxBreakdown(annualWages, model, caveats);
 
-  // 5. Placement fee: agencies only, and only if known.
-  //    Stored as a fraction of first-year wages (e.g. 0.15 = 15%).
-  const feeRate = model.assumptions.placement_fee.value;
+  // 5. Agency fees: agencies only, from fees agencies publish themselves.
   const placementFee: Estimate["placementFee"] = !inputs.viaAgency
     ? "not_applicable"
-    : feeRate === null
-      ? {
-          tbd: true,
-          reason: "We're collecting placement fees from Boston agencies.",
-        }
-      : scale(annualWages, feeRate);
+    : agencyFees(annualWages, model);
 
   // 6. Nanny share: what one family pays, if we know the split.
   const shareDiscount = model.assumptions.nanny_share_discount.value;
@@ -172,23 +190,24 @@ export function estimate(
 
   if (inputs.arrangement === "nanny_share") {
     caveats.push(
-      "For a nanny share, the hourly rate shown is the nanny's full rate before the families split it.",
+      "For a nanny share, these figures are for the whole nanny, before the families split the cost.",
     );
   }
 
-  // 7. All-in: only when every piece is known.
-  const parts = [annualWages, employerTaxes, placementFee];
-  const missing = parts.filter(isTbd);
-  const annualAllIn: Range | Tbd =
-    missing.length > 0 || isTbd(familyShareHourly)
-      ? {
-          tbd: true,
-          reason:
-            "The all-in total needs employer taxes and agency fees, which we're still collecting.",
-        }
-      : sumRanges(
-          parts.filter((p): p is Range => p !== "not_applicable" && !isTbd(p)),
-        );
+  // 7. All-in (first year): add up what we know, list what we don't.
+  const pending = [...employerTaxes.pending];
+  if (isTbd(placementFee)) pending.push("Agency placement fee");
+  if (isTbd(familyShareHourly)) pending.push("Your family's share of a nanny share");
+  const annualAllIn = {
+    known: sumRanges([
+      annualWages,
+      employerTaxes.known,
+      placementFee === "not_applicable" || isTbd(placementFee)
+        ? ZERO
+        : placementFee.range,
+    ]),
+    pending,
+  };
 
   // 8. Things the data doesn't cover yet.
   if (inputs.hoursPerWeek > 40) {
@@ -210,6 +229,14 @@ export function estimate(
     caveats.push("We don't have neighborhood-level rates yet.");
   }
 
+  const used = [
+    ...hourlySources,
+    ...employerTaxes.lines.flatMap((l) => l.sources),
+    ...(placementFee !== "not_applicable" && !isTbd(placementFee)
+      ? placementFee.byAgency.flatMap((a) => a.sources)
+      : []),
+  ];
+
   return {
     segment,
     hourly,
@@ -219,8 +246,138 @@ export function estimate(
     placementFee,
     familyShareHourly,
     annualAllIn,
-    sources,
+    hourlySources,
+    sources: [...new Set(used)],
     caveats,
+  };
+}
+
+// --- Employer taxes ------------------------------------------------------------
+
+export function employerTaxBreakdown(
+  annualWages: Range,
+  model: CostModel = costData,
+  caveats: string[] = [],
+): Breakdown {
+  const pct = (p: DataPoint) => p.value / 100;
+
+  const ficaThreshold = requirePoint(model, "fica_wage_threshold");
+  const ficaRate = requirePoint(model, "fica_employer_rate");
+  const ssBase = requirePoint(model, "ss_wage_base");
+  const futaQuarter = requirePoint(model, "futa_quarterly_threshold");
+  const futaRate = requirePoint(model, "futa_net_rate");
+  const futaBase = requirePoint(model, "futa_wage_base");
+  const pfmlRate = requirePoint(model, "ma_pfml_rate");
+  const pfmlEmployer = requirePoint(model, "ma_pfml_employer_rate");
+
+  if (annualWages.high > ssBase.value) {
+    caveats.push(
+      `Social Security stops at ${usd(ssBase.value)} in wages; this estimate doesn't apply that cap.`,
+    );
+  }
+
+  const fica = perEnd(annualWages, (w) =>
+    w >= ficaThreshold.value ? w * pct(ficaRate) : 0,
+  );
+  const futa = perEnd(annualWages, (w) =>
+    w / 4 >= futaQuarter.value ? Math.min(w, futaBase.value) * pct(futaRate) : 0,
+  );
+  const pfml = perEnd(annualWages, (w) => w * pct(pfmlEmployer));
+
+  const uiRate = model.assumptions.ma_ui_rate.value;
+  const ui: Range | Tbd =
+    uiRate === null
+      ? {
+          tbd: true,
+          reason:
+            "We're confirming the 2026 Massachusetts unemployment rate for household employers.",
+        }
+      : scale(annualWages, uiRate);
+
+  const lines: Line[] = [
+    {
+      key: "fica",
+      label: "Social Security & Medicare (your share)",
+      value: fica,
+      note: `${ficaRate.value}% of wages, once you pay ${usd(ficaThreshold.value)}+ a year`,
+      sources: [ficaRate, ficaThreshold, ssBase],
+    },
+    {
+      key: "futa",
+      label: "Federal unemployment (FUTA)",
+      value: futa,
+      note: `${futaRate.value}% of the first ${usd(futaBase.value)}`,
+      sources: [futaRate, futaBase, futaQuarter],
+    },
+    {
+      key: "pfml",
+      label: "Mass. paid family & medical leave (your share)",
+      value: pfml,
+      note: `${pfmlRate.value}% total, withheld from your nanny's pay when you have fewer than 25 employees`,
+      sources: [pfmlRate, pfmlEmployer],
+    },
+    {
+      key: "ma_ui",
+      label: "Mass. unemployment insurance",
+      value: ui,
+      sources: [],
+    },
+  ];
+
+  return {
+    lines,
+    known: sumRanges(lines.map((l) => l.value).filter((v): v is Range => !isTbd(v))),
+    pending: lines.filter((l) => isTbd(l.value)).map((l) => l.label),
+  };
+}
+
+// --- Agency fees -----------------------------------------------------------------
+
+export function agencyFees(
+  annualWages: Range,
+  model: CostModel = costData,
+): { range: Range; byAgency: AgencyFee[] } | Tbd {
+  const pctPoints = pointsFor(model, "placement_fee").filter(
+    (p) => p.unit === "pct_of_annual_wage",
+  );
+  if (pctPoints.length === 0) {
+    return {
+      tbd: true,
+      reason: "We're collecting placement fees from Boston agencies.",
+    };
+  }
+
+  const byAgency: AgencyFee[] = pctPoints.map((pctPoint) => {
+    const seg = pctPoint.segment ?? "all";
+    const min = pointsFor(model, "placement_fee_min", [seg])[0];
+    const upfront = pointsFor(model, "upfront_fee", [seg])[0];
+    const fee = perEnd(
+      annualWages,
+      (w) =>
+        Math.max((w * pctPoint.value) / 100, min?.value ?? 0) +
+        (upfront?.value ?? 0),
+    );
+    const formula = [
+      `${pctPoint.value}% of first-year pay${min ? ` (min ${usd(min.value)})` : ""}`,
+      upfront ? `${usd(upfront.value)} upfront fee` : null,
+    ]
+      .filter(Boolean)
+      .join(" + ");
+    return {
+      agency: pctPoint.agency ?? pctPoint.source_name,
+      fee,
+      formula,
+      sources: [pctPoint, min, upfront].filter((p): p is DataPoint => !!p),
+    };
+  });
+
+  return {
+    range: {
+      low: Math.min(...byAgency.map((a) => a.fee.low)),
+      mid: median(byAgency.map((a) => a.fee.mid)),
+      high: Math.max(...byAgency.map((a) => a.fee.high)),
+    },
+    byAgency,
   };
 }
 
@@ -240,6 +397,10 @@ function rangeOf(values: number[]): Range {
   };
 }
 
+function perEnd(r: Range, f: (n: number) => number): Range {
+  return { low: f(r.low), mid: f(r.mid), high: f(r.high) };
+}
+
 function scale(r: Range, by: number): Range {
   return { low: r.low * by, mid: r.mid * by, high: r.high * by };
 }
@@ -257,9 +418,9 @@ function sumRanges(rs: Range[]): Range {
 
 // --- Formatting (shared by the page and the estimator UI) ---------------------
 
-/** 22.61 → "$22.61"; 47028.8 → "$47,029" (whole dollars above $1,000). */
+/** 22.61 → "$22.61"; 300 → "$300"; 47028.8 → "$47,029" (whole dollars above $1,000). */
 export function usd(n: number): string {
-  const whole = Math.abs(n) >= 1000;
+  const whole = Math.abs(n) >= 1000 || Number.isInteger(n);
   return n.toLocaleString("en-US", {
     style: "currency",
     currency: "USD",

@@ -4,13 +4,15 @@ import { buttonClass } from "@/components/ui/button";
 import { PageShell } from "@/components/page-intro";
 import { DisclosureNote } from "@/components/disclosure-note";
 import { JsonLd } from "@/components/json-ld";
-import { Estimator } from "@/components/cost/estimator";
+import { FaqList } from "@/components/cost/faq-list";
 import { SourceTable } from "@/components/cost/source-table";
 import { config, siteUrl } from "@/lib/config";
 import { costData, formatDate } from "@/lib/costData";
 import {
+  agencyFeeExamples,
   allInHigh,
   allInLow,
+  allInPending,
   answerFirst,
   costFaq,
   daycareInfantMonthly,
@@ -18,13 +20,17 @@ import {
   hourlyAcrossSources,
   lastUpdated,
   nannyMonthly,
+  newbornHourly,
+  partTimeHourly,
   shortSource,
+  typicalAllIn,
+  usdApproxRange,
 } from "@/lib/costFacts";
-import { defaultInputs, usd, usdRange } from "@/lib/estimator";
+import { defaultInputs, isTbd, usd, usdRange } from "@/lib/estimator";
 
 const path = "/boston/nanny-cost";
-const title = "How much does a nanny cost in Boston?";
-const description = `Boston nanny asking rates run ${usdRange(hourlyAcrossSources)}/hr. The all-in cost adds employer taxes and agency fees. Every source shown, updated ${formatDate(lastUpdated)}.`;
+const title = "How much does a nanny cost in Boston? (2026)";
+const description = `Boston nanny asking rates run ${usdRange(hourlyAcrossSources)}/hr. All-in, a full-time nanny costs ${typicalAllIn} in the first year. Every source shown.`;
 
 export const metadata: Metadata = {
   title,
@@ -33,9 +39,20 @@ export const metadata: Metadata = {
   openGraph: { title, description, type: "article", url: path },
 };
 
+function GuideLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <p className="mt-4">
+      <Link href={href} className="text-link font-medium">
+        {children} →
+      </Link>
+    </p>
+  );
+}
+
 export default function NannyCostPage() {
   const updated = formatDate(lastUpdated);
   const pageUrl = `${siteUrl}${path}`;
+  const hours = defaultInputs.hoursPerWeek;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -53,20 +70,11 @@ export default function NannyCostPage() {
         about: { "@type": "Thing", name: "Cost of hiring a nanny in Boston, MA" },
       },
       {
-        "@type": "FAQPage",
-        "@id": `${pageUrl}#faq`,
-        mainEntity: costFaq.map((f) => ({
-          "@type": "Question",
-          name: f.q,
-          acceptedAnswer: { "@type": "Answer", text: f.a },
-        })),
-      },
-      {
         "@type": "Dataset",
         "@id": `${pageUrl}#dataset`,
         name: "Boston nanny cost data points",
         description:
-          "Published nanny wage and cost figures for Boston, MA, each with its source, measurement basis, date and a confidence label. Most are asking rates, not transacted agency prices.",
+          "Published nanny wage, employer tax and agency fee figures for Boston, MA, each with its source, measurement basis, date and a confidence label. Wage figures are mostly asking rates, not transacted agency prices.",
         url: `${pageUrl}#sources`,
         dateModified: lastUpdated,
         spatialCoverage: { "@type": "Place", name: costData.market },
@@ -83,11 +91,18 @@ export default function NannyCostPage() {
     ],
   };
 
+  const wageRows = [
+    { label: "Full-time, general", value: usdRange(fullTimeExample.hourly), source: fullTimeExample.hourlySources.map(shortSource).join(", ") },
+    { label: "Newborn", value: usd(newbornHourly.value), source: shortSource(newbornHourly) },
+    { label: "Part-time", value: usd(partTimeHourly.value), source: shortSource(partTimeHourly) },
+    { label: "Nanny share (per family)", value: null, source: "Collecting" },
+  ];
+
   return (
     <PageShell>
       <JsonLd data={jsonLd} />
 
-      {/* --- Answer first --- */}
+      {/* 1. Answer first */}
       <header className="prose-width">
         <p className="eyebrow mb-3">
           Boston · Updated <time dateTime={lastUpdated}>{updated}</time>
@@ -96,184 +111,244 @@ export default function NannyCostPage() {
         <p className="mt-5 text-lg">{answerFirst}</p>
       </header>
 
-      <section aria-label="All-in cost" className="mt-10 rounded-xl border border-sand-light bg-white p-6 sm:p-8">
-        <p className="eyebrow">All-in, full-time, per year</p>
-        <p className="mt-2 text-5xl font-medium text-pine tabular-nums sm:text-6xl">
-          {usd(allInLow.value)}–{usd(allInHigh.value)}+
+      {/* Summary card → /estimate (sage = tools and numbers) */}
+      <Link
+        href="/estimate"
+        className="group mt-10 block rounded-xl bg-sage p-6 sm:p-8"
+      >
+        <p className="eyebrow text-ink">All-in, full-time, first year</p>
+        <p className="mt-2 font-heading text-2xl text-ink sm:text-3xl">
+          A typical full-time Boston nanny costs{" "}
+          <span className="font-sans font-medium text-pine tabular-nums">
+            {typicalAllIn}
+          </span>{" "}
+          all-in{allInPending.length > 0 && <span className="text-xl">*</span>}.
         </p>
-        <p className="mt-3 text-muted-ink">
-          Wages + employer taxes + agency fee. Source:{" "}
-          <a href={allInLow.source_url} className="text-link" rel="noopener" target="_blank">
-            {allInLow.source_name}
-          </a>{" "}
-          ({allInLow.as_of}, low confidence: agency marketing).{" "}
-          <a href="#sources" className="text-link">All sources ↓</a>
+        <p className="mt-3 text-[15px] text-ink">
+          Wages at {hours} hours a week + employer taxes + an agency fee.
+          {allInPending.length > 0 && ` *Plus ${allInPending.join(", ")}: TBD — collecting.`}
         </p>
-        <div className="mt-6">
-          <Link href="/estimate" className={buttonClass({ size: "lg" })}>
-            Estimate your all-in cost →
-          </Link>
-        </div>
-      </section>
-
-      {/* --- Estimator --- */}
-      <section id="estimate" className="mt-16 scroll-mt-8">
-        <h2 className="text-3xl">Estimate your cost</h2>
-        <p className="prose-width mt-3 text-muted-ink">
-          Change the inputs to see your range. Anything we don&apos;t have good
-          data for yet shows as &ldquo;TBD — collecting&rdquo; instead of a guess.
+        <p className="mt-4 font-medium text-pine group-hover:underline">
+          Estimate your own cost →
         </p>
-        <div className="mt-6">
-          <Estimator />
-        </div>
-      </section>
+      </Link>
 
       <div className="prose-width">
-        {/* --- Wage vs. all-in --- */}
-        <section id="wage-vs-all-in" className="mt-16">
-          <h2 className="text-3xl">Wage vs. all-in cost</h2>
+        {/* 2. Why it's hard to know (blush = people and feelings) */}
+        <section id="why-its-hard" className="mt-16">
+          <h2 className="text-3xl">Why it&apos;s so hard to know</h2>
           <p className="mt-4">
-            The number most sites quote is the nanny&apos;s hourly wage. In
-            Boston that&apos;s about {usdRange(hourlyAcrossSources)} an hour,
-            or {usdRange(fullTimeExample.annualWages)} a year for{" "}
-            {defaultInputs.hoursPerWeek} hours a week. What you actually pay as the employer is higher:
+            Most numbers you&apos;ll find online are asking rates from job
+            listings, not what families actually pay. Agencies rarely publish
+            their fees, and almost no one adds up the employer taxes.
           </p>
-          <ul className="mt-4 list-disc space-y-2 pl-6">
-            <li><strong>Gross wages</strong>, plus overtime for hours over 40 a week.</li>
-            <li><strong>Employer payroll taxes</strong> you owe as a household employer.</li>
-            <li><strong>An agency placement fee</strong>, if you hire through an agency.</li>
-          </ul>
-          <p className="mt-4">
-            {shortSource(nannyMonthly)} models a full-time Boston nanny at about{" "}
-            {usd(nannyMonthly.value)} a month including employer taxes (a
-            modeled estimate, low confidence).
-          </p>
+          <aside className="mt-6 rounded-xl bg-blush p-5 sm:p-6">
+            <p className="font-heading text-xl text-ink">If this feels like a lot, you&apos;re not alone.</p>
+            <p className="mt-2 text-ink">
+              For many new parents this is the biggest check they&apos;ll ever
+              write for something they can&apos;t easily judge. The goal of this
+              guide is simple: no surprises.
+            </p>
+          </aside>
         </section>
 
-        {/* --- Employer taxes --- */}
+        {/* 3. Wages */}
+        <section id="wages" className="mt-16">
+          <h2 className="text-3xl">Wages</h2>
+          <p className="mt-4">
+            Boston asking rates run {usdRange(hourlyAcrossSources)} an hour. At{" "}
+            {hours} hours a week, that&apos;s {usdRange(fullTimeExample.annualWages)}{" "}
+            a year. Overtime applies to hours over 40 a week.
+          </p>
+          <table className="mt-6 w-full text-[15px]">
+            <thead>
+              <tr className="border-b border-sand text-left">
+                <th className="py-2 font-semibold">Arrangement</th>
+                <th className="py-2 text-right font-semibold">Hourly</th>
+                <th className="py-2 pl-4 font-semibold">Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {wageRows.map((r) => (
+                <tr key={r.label} className="border-b border-sand-light">
+                  <td className="py-2">{r.label}</td>
+                  <td className="py-2 text-right tabular-nums">
+                    {r.value ?? <span className="italic text-muted-ink">TBD — collecting</span>}
+                  </td>
+                  <td className="py-2 pl-4 text-muted-ink">{r.source}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <GuideLink href="/boston/nanny-cost/wages">What Boston nannies earn</GuideLink>
+        </section>
+
+        {/* 4. Employer taxes */}
         <section id="employer-taxes" className="mt-16">
           <h2 className="text-3xl">Employer taxes</h2>
           <p className="mt-4">
             A nanny who works in your home is usually your household employee.
-            That can mean Social Security and Medicare (FICA), federal
-            unemployment tax (FUTA) and Massachusetts unemployment insurance;
-            Massachusetts Paid Family and Medical Leave may also apply.
+            For a full-time nanny at {hours} hours a week, here&apos;s your
+            share in 2026:
           </p>
-          <p className="mt-4">
-            <strong>Our estimate: </strong>
-            <span className="italic text-muted-ink">TBD — collecting.</span>{" "}
-            We&apos;re verifying the 2026 rates with a payroll provider before we
-            publish a number. For the federal rules, see{" "}
+          <table className="mt-6 w-full text-[15px]">
+            <tbody>
+              {fullTimeExample.employerTaxes.lines.map((l) => (
+                <tr key={l.key} className="border-b border-sand-light align-top">
+                  <td className="py-2 pr-4">
+                    {l.label}
+                    {l.note && <span className="block text-sm text-muted-ink">{l.note}</span>}
+                  </td>
+                  <td className="py-2 text-right tabular-nums">
+                    {isTbd(l.value) ? (
+                      <span className="italic text-muted-ink">TBD — collecting</span>
+                    ) : (
+                      usdRange(l.value)
+                    )}
+                  </td>
+                </tr>
+              ))}
+              <tr className="font-semibold">
+                <td className="py-2">Known so far, per year</td>
+                <td className="py-2 text-right text-pine tabular-nums">
+                  {usdRange(fullTimeExample.employerTaxes.known)}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <p className="mt-4 text-[15px] text-muted-ink">
+            Not tax advice. Federal rules:{" "}
             <a href="https://www.irs.gov/publications/p926" className="text-link" rel="noopener" target="_blank">
               IRS Publication 926
-            </a>.
+            </a>
+            .
           </p>
+          <GuideLink href="/boston/nanny-cost/taxes">Nanny taxes in Massachusetts</GuideLink>
         </section>
 
-        {/* --- Agency fees --- */}
+        {/* 5. Agency fees */}
         <section id="agency-fees" className="mt-16">
-          <h2 className="text-3xl">Agency fees</h2>
+          <h2 className="text-3xl">If you use an agency</h2>
           <p className="mt-4">
-            Agencies handle the search, screening and backup if a placement
-            doesn&apos;t work out, and usually charge a one-time placement fee.
-            Few Boston agencies publish theirs.
+            Agencies handle the search, screening and a replacement guarantee,
+            and usually charge a one-time fee: a percentage of the nanny&apos;s
+            first-year pay with a minimum, plus an upfront fee. Two Boston
+            agencies publish theirs. For a full-time nanny at {hours} hours a
+            week:
           </p>
-          <p className="mt-4">
-            <strong>Typical placement fee: </strong>
-            <span className="italic text-muted-ink">TBD — we&apos;re collecting this.</span>{" "}
-            We&apos;ll publish a range once at least three Boston agencies share
-            their fees.
+          {agencyFeeExamples.length > 0 ? (
+            <table className="mt-6 w-full text-[15px]">
+              <tbody>
+                {agencyFeeExamples.map((a) => (
+                  <tr key={a.agency} className="border-b border-sand-light align-top">
+                    <td className="py-2 pr-4">
+                      <a href={a.sources[0].source_url} className="text-link" rel="noopener" target="_blank">
+                        {a.agency}
+                      </a>
+                      <span className="block text-sm text-muted-ink">{a.formula}</span>
+                    </td>
+                    <td className="py-2 text-right tabular-nums">about {usdApproxRange(a.fee)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p className="mt-4 italic text-muted-ink">TBD — collecting.</p>
+          )}
+          <p className="mt-4 text-[15px] text-muted-ink">
+            Fees vary widely, and these are what agencies publish, not what
+            every family pays. We&apos;re collecting more.
           </p>
           <div className="mt-6">
             <DisclosureNote />
           </div>
+          <GuideLink href="/boston/nanny-cost/agency-fees">What Boston nanny agencies charge</GuideLink>
         </section>
 
-        {/* --- Nanny share --- */}
-        <section id="nanny-share" className="mt-16">
-          <h2 className="text-3xl">Nanny share</h2>
-          <p className="mt-4">
-            In a nanny share, two families hire one nanny together and split the
-            cost. Each family pays less than hiring alone, while the nanny often
-            earns more per hour than for one family.
-          </p>
-          <p className="mt-4">
-            <strong>How much each family saves: </strong>
-            <span className="italic text-muted-ink">TBD — collecting.</span>{" "}
-            We&apos;re gathering real splits from Boston families and agencies.
-          </p>
+        {/* 6. Ways families lower the cost */}
+        <section id="lower-the-cost" className="mt-16">
+          <h2 className="text-3xl">Ways families lower the cost</h2>
+          <ul className="mt-4 list-disc space-y-2 pl-6">
+            <li>
+              <strong>Nanny share:</strong> two families split one nanny. How
+              much each saves: <span className="italic text-muted-ink">TBD — collecting</span>.{" "}
+              <Link href="/boston/nanny-cost/nanny-share" className="text-link">How a share changes the math</Link>
+            </li>
+            <li>
+              <strong>Part-time:</strong> {shortSource(partTimeHourly)} lists{" "}
+              {usd(partTimeHourly.value)} an hour for part-time nannies in Boston.
+            </li>
+            <li>
+              <strong>Hiring on your own:</strong> no agency fee, but you do the
+              search, screening and payroll yourself.
+            </li>
+          </ul>
         </section>
 
-        {/* --- Nanny vs. daycare --- */}
+        {/* 7. Nanny vs. daycare */}
         <section id="nanny-vs-daycare" className="mt-16">
           <h2 className="text-3xl">Nanny vs. daycare</h2>
           <p className="mt-4">
-            {shortSource(daycareInfantMonthly)} models infant daycare in Boston
-            at about <strong>{usd(daycareInfantMonthly.value)} a month</strong>,
+            {shortSource(daycareInfantMonthly)} models infant daycare in Boston at
+            about <strong>{usd(daycareInfantMonthly.value)} a month</strong>,
             versus about <strong>{usd(nannyMonthly.value)} a month</strong> for a
-            full-time nanny including employer taxes. Both are modeled
-            estimates (low confidence). A nanny costs more for one child but
-            gives you one-on-one care at home and a schedule that fits yours; a
-            nanny share or more than one child can narrow the gap.
+            full-time nanny including employer taxes. Both are modeled estimates
+            (low confidence).
           </p>
+          <GuideLink href="/boston/nanny-cost/vs-daycare">Nanny vs. daycare in Boston</GuideLink>
         </section>
       </div>
 
-      {/* --- Sources --- */}
+      {/* 8. Sources and method */}
       <section id="sources" className="mt-16 scroll-mt-8">
         <h2 className="text-3xl">Sources</h2>
         <p className="prose-width mt-4 rounded-lg bg-blue px-4 py-3 text-[15px]">
-          Most public figures are asking rates, not what families actually pay
-          through agencies. We&apos;re collecting real quotes.
+          Most public wage figures are asking rates, not what families actually
+          pay through agencies. We&apos;re collecting real quotes.
         </p>
         <div className="mt-6">
           <SourceTable />
         </div>
       </section>
 
-      {/* --- FAQ: native <details>, so answers are in the HTML and work without JS --- */}
-      <section id="faq" className="prose-width mt-16 scroll-mt-8">
-        <h2 className="text-3xl">Frequently asked questions</h2>
-        <div className="mt-6 divide-y divide-sand-light border-y border-sand-light">
-          {costFaq.map((f) => (
-            <details key={f.q} className="group py-4">
-              <summary className="flex min-h-11 list-none items-center justify-between gap-4 font-semibold text-ink [&::-webkit-details-marker]:hidden">
-                {f.q}
-                <span aria-hidden className="text-pine transition-transform group-open:rotate-45">+</span>
-              </summary>
-              <p className="mt-2">{f.a}</p>
-            </details>
-          ))}
-        </div>
+      <section id="method" className="prose-width mt-12">
+        <h2 className="text-2xl">How we calculate this</h2>
+        <ul className="mt-4 list-disc space-y-2 pl-6 text-[15px] text-muted-ink">
+          <li>Hourly range: the lowest, middle and highest average rate across our sources.</li>
+          <li>Yearly wages = hourly rate × hours per week × 52 weeks.</li>
+          <li>Employer taxes = each 2026 rate × wages, with the IRS thresholds.</li>
+          <li>Agency fees = each agency&apos;s published percentage × first-year wages (or its minimum) + its upfront fee.</li>
+          <li>
+            Anything we can&apos;t source yet shows &ldquo;TBD — collecting.&rdquo;
+            One local agency puts the full-time total higher, at{" "}
+            {usd(allInLow.value)}–{usd(allInHigh.value)}+ (
+            <a href={allInLow.source_url} className="text-link" rel="noopener" target="_blank">
+              {shortSource(allInLow)}
+            </a>
+            , low confidence).
+          </li>
+          <li>Last updated <time dateTime={lastUpdated}>{updated}</time>. We re-check every figure monthly.</li>
+        </ul>
       </section>
 
-      {/* --- Method + CTA --- */}
-      <section id="method" className="prose-width mt-16">
-        <h2 className="text-3xl">How we calculate this</h2>
-        <ul className="mt-4 list-disc space-y-2 pl-6 text-[15px] text-muted-ink">
-          <li>
-            The hourly range is the lowest, middle and highest average rate
-            across our sources for your type of care.
-          </li>
-          <li>Yearly wages = hourly rate × hours per week × 52 weeks.</li>
-          <li>
-            Taxes, agency fees and nanny share splits appear only once we can
-            source them. Until then they show &ldquo;TBD — collecting&rdquo;.
-          </li>
-          <li>
-            Last updated <time dateTime={lastUpdated}>{updated}</time>. We
-            re-check every figure monthly.
-          </li>
-        </ul>
-        <div className="mt-8 rounded-xl bg-sage p-6">
-          <p className="font-heading text-2xl text-ink">What would it cost your family?</p>
-          <p className="mt-2">
-            Put in your hours and your kids&apos; ages to see your own all-in range.
-          </p>
-          <Link href="/estimate" className={`${buttonClass({ size: "lg" })} mt-5`}>
-            Estimate your all-in cost →
-          </Link>
+      {/* 9. Top questions → /faq */}
+      <section id="faq" className="mt-16 scroll-mt-8">
+        <h2 className="text-3xl">Common questions</h2>
+        <div className="mt-6">
+          <FaqList items={costFaq.filter((f) => f.pillar).slice(0, 3)} />
         </div>
+        <p className="mt-4">
+          <Link href="/faq" className="text-link font-medium">More questions →</Link>
+        </p>
+      </section>
+
+      {/* CTA */}
+      <section className="prose-width mt-16 rounded-xl bg-sage p-6">
+        <p className="font-heading text-2xl text-ink">What would it cost your family?</p>
+        <p className="mt-2">Put in your hours and your kids&apos; ages to see your own all-in range.</p>
+        <Link href="/estimate" className={`${buttonClass({ size: "lg" })} mt-5`}>
+          Estimate your all-in cost →
+        </Link>
       </section>
     </PageShell>
   );
