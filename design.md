@@ -1,4 +1,4 @@
-# design.md — {{BRAND}} v1
+# design.md — Silly Goose v1
 
 Read this before building or styling any UI. It overrides any shadcn preset defaults.
 
@@ -74,5 +74,5 @@ No dark mode in v1.
 - **Avoid:** "revolutionize," "seamless," "perfect match," "premier," exclamation points, urgency ("Only 3 spots left!").
 - Always show the source of a number, and admit gaps ("We're still collecting this").
 
-## Logo (placeholder)
-A lowercase wordmark in the heading serif, in ink. Mushie and Little Dutch prove a simple lowercase wordmark is enough. Replace it once the brand name is chosen.
+## Logo
+Brand name: **Silly Goose** (chosen 2026-11-17). Wordmark: lowercase **"silly goose"** in the heading serif (Newsreader), in ink, like Mushie and Little Dutch. Use "Silly Goose" in sentences and page titles. The playful name is balanced by the calm, sourced design and voice; keep the copy plainspoken, never punny.

@@ -7,7 +7,7 @@
 
 export const config = {
   /** Public brand name shown in the header, page titles and emails. */
-  brand: "{{BRAND}}",
+  brand: "Silly Goose",
 
   /** Bare domain, no protocol, e.g. "example.com". */
   domain: "{{DOMAIN}}",

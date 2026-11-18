@@ -1,4 +1,4 @@
-# CLAUDE.md — {{BRAND}} v1
+# CLAUDE.md — Silly Goose v1
 
 ## What this is
 A demand-test website for Boston families looking for a nanny. It's a buyer-side, price-transparent front door that routes families to trusted partner agencies. **It's an experiment, not a platform.** Read `docs/01-one-pager.md` and `docs/04-prd-v1.md` before writing code.
