@@ -66,7 +66,8 @@ No dark mode in v1.
   2. *The kitchen table:* morning light, a coffee mug, a sippy cup and a notebook with handwritten numbers and a pencil. The "figuring it out" moment.
   3. *The nursery corner:* a cream armchair, a blush knit throw, a sage plush toy on the floor. The "who will care for them" moment.
 - **Source:** AI-generated (cheapest, exact palette) or licensed (Unsplash / Stocksy). If generated: no text, no logos, no hands or faces, and check for artifacts. Export a WebP under 200 KB, give it real alt text, and use `next/image` with priority.
-- Placeholder until chosen: a soft cream→blush gradient block in the hero.
+- **CHOSEN (2026-11-17): option 2, the kitchen table.** AI-generated in Figma: https://www.figma.com/design/Hdyt9ajaYV5vjQrXxZfrSt. The objects sit in the right third; the left two-thirds is empty space for the headline. Alt text: "A sunlit kitchen table with a coffee mug, a toddler's sippy cup and a notebook of handwritten numbers."
+- On narrow phones, crop to the right side (`object-position: right`) so the cup and notebook stay visible; put the headline below the image rather than on top.
 ## Voice
 - Plainspoken, warm, specific. Write like a parent talking to another parent.
 - **Use:** "what you'll actually pay," "all-in," "we work for you," "here's where this number comes from."

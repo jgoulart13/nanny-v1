@@ -18,7 +18,10 @@ Do these in order and commit after each group.
 
 ## C. Home page
 1. Hero: eyebrow "BOSTON · 2026" → H1 about the emotional reality (draft: *"Finding someone to care for your child is personal. Knowing what it costs shouldn't be a mystery."*) → one line of support → primary pill **"See what it costs"** → secondary outline **"Estimate your cost."**
-2. Hero background: a soft cream→blush wash, plus a placeholder slot for the hero image (see `design.md` Imagery). Use `next/image` once an image is added at `public/hero.webp`.
+2. Hero image (see `design.md` Imagery):
+   - Download it: `curl -fL -o /tmp/hero.png "https://www.figma.com/api/mcp/asset/4142e2cf-742a-47b1-8bd2-f85d634723bb.png"` (**this link expires 2026-11-24**). If it has expired, ask Jonathan to export the image from the Figma file in `design.md` as PNG and drop it in `public/`.
+   - Convert it to `public/hero.webp` (under 200 KB, about 1600px wide) with `sharp` or `npx @squoosh/cli`. Commit only the WebP.
+   - Render it with `next/image` (`priority`, alt text from `design.md`). The headline sits over the empty left side on desktop and below the image on mobile. Add a subtle cream→blush wash on the left edge so the ink headline keeps strong contrast.
 3. Below the hero, a blush section, **"The part no one prepares you for"**: three short cards on the real journey (trusting a stranger with your child; not knowing what's fair to pay; becoming an employer overnight). Each card links to the relevant guide.
 4. Then a sage section, **"What it actually costs"**: the headline range plus three numbers (hourly, employer taxes, agency fee range) with sources, linking to the pillar.
 5. Footer note: "We don't take money from agencies." (true today). Link to `/how-it-works`.
