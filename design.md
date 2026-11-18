@@ -75,4 +75,4 @@ No dark mode in v1.
 - Always show the source of a number, and admit gaps ("We're still collecting this").
 
 ## Logo
-Brand name: **Silly Goose** (chosen 2026-11-17). Wordmark: lowercase **"silly goose"** in the heading serif (Newsreader), in ink, like Mushie and Little Dutch. Use "Silly Goose" in sentences and page titles. The playful name is balanced by the calm, sourced design and voice; keep the copy plainspoken, never punny.
+Brand name: **Silly Goose** (chosen 2026-11-17). Wordmark: lowercase **"silly goose"** in the heading serif (Newsreader), in ink, like Mushie and Little Dutch. Use "Silly Goose" in sentences and page titles. **Mark (chosen 2026-11-18): logo A, a parent goose (pine) with a gosling following (blush, pine outline).** Files in `public/brand/`: `silly-goose-mark.svg` (primary), `-on-dark.svg`, `-one-color.svg`, `silly-goose-icon.svg` (sage rounded square: favicon/app icon). Header lockup: mark at ~40px tall to the left of the wordmark. Sketch stage; refine before print use. The playful name is balanced by the calm, sourced design and voice; keep the copy plainspoken, never punny.
