@@ -1,6 +1,8 @@
 // lib/routes.ts
-// Every public page from docs/04-prd-v1.md, in one list.
-// The sitemap reads from here, so a new page only needs adding once.
+// Every public, indexable page, in one list. The sitemap reads from here.
+// Hidden on purpose (docs/04-prd-v1.md scope change, 2026-11-15):
+//   /brief and /for-agencies: noindex, never linked, code kept for later.
+//   /boston/nanny-cost/* cluster stubs: noindex until real content lands.
 
 export type PublicRoute = {
   path: string;
@@ -13,19 +15,19 @@ export type PublicRoute = {
 export const publicRoutes: PublicRoute[] = [
   { path: "/", changeFrequency: "monthly", priority: 1 },
   { path: "/boston/nanny-cost", changeFrequency: "monthly", priority: 1 },
-  { path: "/brief", changeFrequency: "monthly", priority: 0.9 },
+  { path: "/estimate", changeFrequency: "monthly", priority: 0.9 },
   { path: "/how-it-works", changeFrequency: "monthly", priority: 0.7 },
   { path: "/faq", changeFrequency: "monthly", priority: 0.7 },
-  { path: "/for-agencies", changeFrequency: "monthly", priority: 0.5 },
   { path: "/privacy", changeFrequency: "yearly", priority: 0.2 },
   { path: "/terms", changeFrequency: "yearly", priority: 0.2 },
 ];
 
-/** Header navigation (step 01 spec: brand, Cost, How it works, For agencies). */
+/** Header navigation (step 02b): Costs · Estimate · FAQ · About. */
 export const headerNav = [
-  { href: "/boston/nanny-cost", label: "Cost" },
-  { href: "/how-it-works", label: "How it works" },
-  { href: "/for-agencies", label: "For agencies" },
+  { href: "/boston/nanny-cost", label: "Costs" },
+  { href: "/estimate", label: "Estimate" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/how-it-works", label: "About" },
 ];
 
 /** CLAUDE.md rule 5: anything that mentions agencies links here. */

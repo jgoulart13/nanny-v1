@@ -17,6 +17,18 @@ export const metricSchema = z.enum([
   "annual_all_in_high",
   "placement_fee",
   "daycare_infant_monthly",
+  // Employer taxes (IRS Pub 926, Mass. DFML)
+  "fica_wage_threshold",
+  "fica_employer_rate",
+  "ss_wage_base",
+  "futa_quarterly_threshold",
+  "futa_net_rate",
+  "futa_wage_base",
+  "ma_pfml_rate",
+  "ma_pfml_employer_rate",
+  // Agency fees (agency-disclosed)
+  "placement_fee_min",
+  "upfront_fee",
 ]);
 
 export const dataPointSchema = z.object({
@@ -29,6 +41,8 @@ export const dataPointSchema = z.object({
     "usd_per_year",
     "usd_flat",
     "pct_of_annual_wage",
+    "pct_of_wages",
+    "usd_per_quarter",
   ]),
   source_name: z.string().min(1),
   source_url: z.url(),
@@ -40,10 +54,13 @@ export const dataPointSchema = z.object({
     "agency_disclosed",
     "family_reported",
     "modeled",
+    "government_published",
   ]),
   as_of: z.string().min(1),
   confidence: z.enum(["low", "medium", "high"]),
   notes: z.string().optional(),
+  /** Agency name, for agency-disclosed fees. */
+  agency: z.string().optional(),
 });
 
 /**
@@ -62,8 +79,7 @@ export const costModelSchema = z.object({
   updated: z.iso.date(),
   data_points: z.array(dataPointSchema).min(1),
   assumptions: z.object({
-    employer_tax_rate_estimate: assumptionSchema,
-    placement_fee: assumptionSchema,
+    ma_ui_rate: assumptionSchema,
     nanny_share_discount: assumptionSchema,
   }),
 });
@@ -100,7 +116,19 @@ export const basisLabel: Record<DataPoint["basis"], string> = {
   agency_disclosed: "Published by an agency",
   family_reported: "Reported by families",
   modeled: "Modeled estimate",
+  government_published: "Government publication",
 };
+
+/** The single data point for a metric (and segment), or throw at build time. */
+export function requirePoint(
+  model: CostModel,
+  metric: DataPoint["metric"],
+  segment?: string,
+): DataPoint {
+  const p = pointsFor(model, metric, segment ? [segment] : undefined)[0];
+  if (!p) throw new Error(`Missing data point: ${metric} (${segment ?? "any"})`);
+  return p;
+}
 
 /** "2026-11-08" → "November 8, 2026" */
 export function formatDate(isoDate: string): string {

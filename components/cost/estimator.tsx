@@ -1,13 +1,15 @@
 "use client";
 
 // The estimator: a sage card with inputs on the left and a live result on the
-// right (stacked on phones). All math lives in lib/estimator.ts.
+// right, with a sources panel under the result (stacked on phones).
+// All math lives in lib/estimator.ts.
 // With JavaScript off, the server-rendered HTML still shows the default
 // full-time example, so the page never depends on this component.
 
 import { useId, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { formatAsOf } from "@/lib/costData";
+import { basisLabel, formatAsOf } from "@/lib/costData";
+import { figureLabel, formatValue } from "@/lib/costLabels";
 import {
   defaultInputs,
   estimateInputsSchema,
@@ -189,59 +191,81 @@ export function Estimator() {
       </form>
 
       {/* Result */}
-      <div aria-live="polite">
+      <div aria-live="polite" className="space-y-4">
         {!result ? (
           <p className="rounded-lg bg-white p-5 text-ink">
             Check the inputs: hours must be 1–70 and the ZIP must be 5 digits.
           </p>
         ) : (
-          <div className="rounded-lg bg-white p-5 sm:p-6">
-            <p className="eyebrow">Hourly rate</p>
-            <p className="mt-1 text-4xl font-medium text-pine tabular-nums sm:text-5xl">
-              {usdRange(result.hourly)}
-            </p>
-
-            <dl className="mt-6 divide-y divide-sand-light text-[15px]">
-              <Row label="Weekly wages" value={result.weekly} />
-              <Row label="Yearly wages" value={result.annualWages} />
-              <Row label="Employer taxes" value={result.employerTaxes} />
-              <Row label="Agency placement fee" value={result.placementFee} />
-              {result.familyShareHourly !== "not_applicable" && (
-                <Row label="Your share, per hour" value={result.familyShareHourly} />
-              )}
-              <Row label="All-in, per year" value={result.annualAllIn} strong />
-            </dl>
-
-            {isTbd(result.annualAllIn) && (
-              <p className="mt-3 text-[15px] text-muted-ink">
-                So far: at least {usdRange(result.annualWages)} a year in wages,
-                plus taxes{result.placementFee !== "not_applicable" && " and the agency fee"}.
+          <>
+            <div className="rounded-lg bg-white p-5 sm:p-6">
+              <p className="eyebrow">All-in, first year</p>
+              <p className="mt-1 text-4xl font-medium text-pine tabular-nums sm:text-5xl">
+                {usdRange(result.annualAllIn.known)}
               </p>
-            )}
+              {result.annualAllIn.pending.length > 0 && (
+                <p className="mt-2 text-[15px] text-muted-ink">
+                  + {result.annualAllIn.pending.join(", ")}:{" "}
+                  <span className="italic">TBD — collecting</span>
+                </p>
+              )}
 
-            {result.caveats.length > 0 && (
-              <ul className="mt-4 list-disc space-y-1 pl-5 text-[15px] text-muted-ink">
-                {result.caveats.map((c) => (
-                  <li key={c}>{c}</li>
+              <dl className="mt-6 divide-y divide-sand-light text-[15px]">
+                <Row label="Hourly rate" value={result.hourly} />
+                <Row label="Weekly wages" value={result.weekly} />
+                <Row label="Yearly wages" value={result.annualWages} strong />
+                {result.employerTaxes.lines.map((l) => (
+                  <Row key={l.key} label={l.label} value={l.value} note={l.note} indent />
                 ))}
-              </ul>
-            )}
+                <Row label="Employer taxes (known so far)" value={result.employerTaxes.known} strong />
+                {result.placementFee === "not_applicable" ? (
+                  <Row label="Agency fees" value="not_applicable" />
+                ) : isTbd(result.placementFee) ? (
+                  <Row label="Agency fees (one-time)" value={result.placementFee} strong />
+                ) : (
+                  <>
+                    <Row label="Agency fees (one-time)" value={result.placementFee.range} strong />
+                    {result.placementFee.byAgency.map((a) => (
+                      <Row key={a.agency} label={a.agency} value={a.fee} note={a.formula} indent />
+                    ))}
+                  </>
+                )}
+                {result.familyShareHourly !== "not_applicable" && (
+                  <Row label="Your share, per hour" value={result.familyShareHourly} />
+                )}
+              </dl>
 
-            <div className="mt-5 border-t border-sand-light pt-4">
-              <p className="mb-2 text-sm font-semibold text-ink">Hourly rate sources</p>
-              <ul className="space-y-2 text-sm">
+              {result.caveats.length > 0 && (
+                <ul className="mt-4 list-disc space-y-1 pl-5 text-[15px] text-muted-ink">
+                  {result.caveats.map((c) => (
+                    <li key={c}>{c}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+
+            {/* Sources panel: every figure this estimate used */}
+            <div className="rounded-lg bg-white p-5 sm:p-6">
+              <p className="font-semibold text-ink">Sources for this estimate</p>
+              <ul className="mt-3 divide-y divide-sand-light text-sm">
                 {result.sources.map((s) => (
-                  <li key={s.source_url} className="flex flex-wrap items-center gap-2">
-                    <a href={s.source_url} className="text-link" rel="noopener" target="_blank">
-                      {s.source_name}
-                    </a>
-                    <span className="text-muted-ink">{formatAsOf(s.as_of)}</span>
-                    <Badge variant={s.confidence}>{s.confidence} confidence</Badge>
+                  <li key={`${s.metric}-${s.segment}-${s.source_url}`} className="py-2">
+                    <div className="flex items-baseline justify-between gap-3">
+                      <span className="text-ink">{figureLabel(s)}</span>
+                      <span className="shrink-0 font-medium tabular-nums">{formatValue(s)}</span>
+                    </div>
+                    <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-muted-ink">
+                      <a href={s.source_url} className="text-link" rel="noopener" target="_blank">
+                        {s.source_name}
+                      </a>
+                      <span>· {basisLabel[s.basis]} · {formatAsOf(s.as_of)}</span>
+                      <Badge variant={s.confidence}>{s.confidence}</Badge>
+                    </div>
                   </li>
                 ))}
               </ul>
             </div>
-          </div>
+          </>
         )}
       </div>
     </div>
@@ -251,16 +275,24 @@ export function Estimator() {
 function Row({
   label,
   value,
+  note,
   strong,
+  indent,
 }: {
   label: string;
   value: Range | Tbd | "not_applicable";
+  note?: string;
   strong?: boolean;
+  indent?: boolean;
 }) {
+  // Valid <dl> structure: <div> groups holding exactly one <dt> and one <dd>.
   return (
-    <div className="flex items-baseline justify-between gap-4 py-2">
-      <dt className={strong ? "font-semibold text-ink" : "text-ink"}>{label}</dt>
-      <dd className="text-right tabular-nums">
+    <div className={`grid grid-cols-[1fr_auto] items-baseline gap-x-4 py-2 ${indent ? "pl-4" : ""}`}>
+      <dt className={strong ? "font-semibold text-ink" : "text-ink"}>
+        {label}
+        {note && <span className="mt-0.5 block text-sm font-normal text-muted-ink">{note}</span>}
+      </dt>
+      <dd className="text-right whitespace-nowrap tabular-nums">
         {value === "not_applicable" ? (
           <span className="text-muted-ink">Not applicable</span>
         ) : isTbd(value) ? (

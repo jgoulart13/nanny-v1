@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     template: `%s · ${config.brand}`,
   },
   description:
-    "Find a great Boston nanny through trusted agencies, and know what you should pay.",
+    "What a Boston nanny really costs: wages, employer taxes and agency fees, with every source shown.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

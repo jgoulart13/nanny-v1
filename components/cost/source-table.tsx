@@ -7,52 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  basisLabel,
-  costData,
-  formatAsOf,
-  type DataPoint,
-} from "@/lib/costData";
-import { usd } from "@/lib/estimator";
-
-const metricLabel: Record<DataPoint["metric"], string> = {
-  hourly_rate_avg: "Average hourly rate",
-  hourly_rate_low: "Low hourly rate",
-  hourly_rate_high: "High hourly rate",
-  monthly_cost: "Monthly cost",
-  annual_all_in_low: "All-in yearly cost, low end",
-  annual_all_in_high: "All-in yearly cost, high end",
-  placement_fee: "Agency placement fee",
-  daycare_infant_monthly: "Infant daycare, monthly",
-};
-
-const segmentLabel: Record<string, string> = {
-  all: "all nannies",
-  newborn: "newborn",
-  part_time: "part-time",
-  full_time: "full-time",
-  child_care_provider: "child care providers",
-  infant_center: "daycare center",
-};
-
-const unitSuffix: Record<DataPoint["unit"], string> = {
-  usd_per_hour: "/hr",
-  usd_per_month: "/mo",
-  usd_per_year: "/yr",
-  usd_flat: "",
-  pct_of_annual_wage: "",
-};
-
-function formatValue(p: DataPoint): string {
-  return p.unit === "pct_of_annual_wage"
-    ? `${p.value}% of yearly wages`
-    : `${usd(p.value)}${unitSuffix[p.unit]}`;
-}
+import { basisLabel, costData, formatAsOf } from "@/lib/costData";
+import { figureLabel, formatValue } from "@/lib/costLabels";
 
 /** Figures we know we need but don't have yet (assumptions with value: null). */
 const pending = [
-  { label: "Employer payroll taxes", key: "employer_tax_rate_estimate" },
-  { label: "Agency placement fee", key: "placement_fee" },
+  { label: "Mass. unemployment insurance rate", key: "ma_ui_rate" },
   { label: "Nanny share split", key: "nanny_share_discount" },
 ] as const;
 
@@ -68,10 +28,7 @@ export function SourceTable() {
           <li key={`${p.metric}-${p.segment}-${p.source_url}`} className="rounded-lg border border-sand-light bg-white p-4 text-[15px]">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-ink">
-                {metricLabel[p.metric]}
-                {p.segment && segmentLabel[p.segment] && (
-                  <span className="text-muted-ink">, {segmentLabel[p.segment]}</span>
-                )}
+                {figureLabel(p)}
               </p>
               <p className="shrink-0 font-medium tabular-nums">{formatValue(p)}</p>
             </div>
@@ -108,10 +65,7 @@ export function SourceTable() {
           {costData.data_points.map((p) => (
             <TableRow key={`${p.metric}-${p.segment}-${p.source_url}`} className="border-sand-light">
               <TableCell className="whitespace-normal">
-                {metricLabel[p.metric]}
-                {p.segment && segmentLabel[p.segment] && (
-                  <span className="text-muted-ink">, {segmentLabel[p.segment]}</span>
-                )}
+                {figureLabel(p)}
               </TableCell>
               <TableCell className="text-right font-medium tabular-nums">{formatValue(p)}</TableCell>
               <TableCell className="whitespace-normal">
