@@ -109,9 +109,11 @@ async function GuideBody({ params }: { params: PageProps<"/guides/[slug]">["para
           </p>
         )}
 
-        <div className="mt-8">
-          <DisclosureNote />
-        </div>
+        {guide.showFunding && (
+          <div className="mt-8">
+            <DisclosureNote />
+          </div>
+        )}
 
         <div className="mt-10 rounded-xl bg-sage p-6">
           <p className="font-heading text-2xl text-ink">What would it cost your family?</p>

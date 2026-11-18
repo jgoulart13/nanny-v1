@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/button";
 import { PageShell } from "@/components/page-intro";
-import { DisclosureNote } from "@/components/disclosure-note";
 import { JsonLd } from "@/components/json-ld";
 import { FaqList } from "@/components/cost/faq-list";
 import { SourceTable } from "@/components/cost/source-table";
@@ -262,9 +261,6 @@ export default function NannyCostPage() {
             Fees vary widely, and these are what agencies publish, not what
             every family pays. We&apos;re collecting more.
           </p>
-          <div className="mt-6">
-            <DisclosureNote />
-          </div>
           <GuideLink href="/boston/nanny-cost/agency-fees">What Boston nanny agencies charge</GuideLink>
         </section>
 

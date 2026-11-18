@@ -1,40 +1,46 @@
 {
-  "_readme": "Curated 'Around Boston' links for the home page. Takeaways are written in our own words, never copied. Check each URL still loads before publishing. Last checked 2026-11-17.",
+  "_readme": "'Around Boston' digest on the home page (design-explorations/README.md, option F). Takeaways are in our own words, never copied. The home page shows the first 5. Check each URL still loads before publishing. Last checked 2026-11-17.",
+  "month": "November",
   "items": [
     {
+      "topic": "Taxes",
       "title": "Household Employer's Tax Guide (Pub. 926), 2026",
       "source": "IRS",
       "url": "https://www.irs.gov/pub/irs-pdf/p926.pdf",
       "date": "2026",
-      "takeaway": "Pay one household employee $3,000 or more in 2026 and you owe Social Security and Medicare on all of it, not just the amount over $3,000."
+      "takeaway": "Pay one household employee $3,000+ this year and Social Security and Medicare apply to all of it."
     },
     {
+      "topic": "Paperwork",
       "title": "Domestic workers: notice of rights and model agreement",
       "source": "Mass. Attorney General",
       "url": "https://www.mass.gov/info-details/domestic-workers",
       "date": "2026-11",
-      "takeaway": "Once a nanny works 16 or more hours a week, Massachusetts requires a signed written agreement before work starts. The AG's office offers a free model you can fill in."
+      "takeaway": "Working 16+ hours a week? Massachusetts requires a written agreement, and the AG gives you a free template."
     },
     {
-      "title": "PFML contribution rates and calculator",
+      "topic": "Taxes",
+      "title": "Paid Family & Medical Leave rates and calculator",
       "source": "Mass. DFML",
       "url": "https://www.mass.gov/info-details/paid-family-and-medical-leave-employer-contribution-rates-and-calculator",
       "date": "2026-10",
-      "takeaway": "A household with one employee sends 0.46% of wages for paid leave, and all of it can come out of the nanny's paycheck. There's no employer share under 25 employees."
+      "takeaway": "A one-nanny household remits 0.46% of wages for paid leave, with no employer share."
     },
     {
+      "topic": "Daycare",
       "title": "National Database of Childcare Prices",
-      "source": "U.S. DOL Women's Bureau",
+      "source": "U.S. Dept. of Labor",
       "url": "https://www.dol.gov/agencies/wb/topics/featured-childcare",
       "date": "2024",
       "takeaway": "Daycare prices for every county, including Suffolk, Middlesex and Norfolk. The newest data is from 2022, so expect today's prices to be higher."
     },
     {
+      "topic": "Wages",
       "title": "2026 Salary & Benefits Guide",
       "source": "The Washburn Agency",
       "url": "https://washburnagency.com/2026salaryguide/",
       "date": "2026",
-      "takeaway": "A Boston agency's view of what household staff are paid, including the benefits families usually offer."
+      "takeaway": "A Boston agency's view of what nannies and household staff are paid, benefits included."
     }
   ]
 }

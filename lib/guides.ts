@@ -29,6 +29,8 @@ export const frontmatterSchema = z.object({
   shortAnswer: z.string().min(1),
   /** Show the "Not tax or legal advice" line. */
   notAdvice: z.boolean().default(false),
+  /** Show "how we're funded" at the end (agency-fees guide only, CLAUDE.md rule 5). */
+  showFunding: z.boolean().default(false),
   sources: z
     .array(
       z.object({
