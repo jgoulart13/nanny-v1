@@ -22,6 +22,11 @@ const point = (metric: DataPoint["metric"], segment?: string) =>
 const hourlyPoints = pointsFor(costData, "hourly_rate_avg");
 const hourlyValues = hourlyPoints.map((p) => p.value);
 
+/** "Nanny Lane, Care.com": every source behind the hourly range. */
+export const hourlySourceNames = [
+  ...new Set(hourlyPoints.map((p) => p.source_name.split(" — ")[0])),
+].join(", ");
+
 /** Lowest to highest average hourly rate across every source and segment. */
 export const hourlyAcrossSources: Range = {
   low: Math.min(...hourlyValues),

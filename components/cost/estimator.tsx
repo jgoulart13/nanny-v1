@@ -289,7 +289,7 @@ function Row({
     <div className={`py-2 ${indent ? "pl-4" : ""}`}>
       <div className="flex items-baseline justify-between gap-4">
         <dt className={strong ? "font-semibold text-ink" : "text-ink"}>{label}</dt>
-        <dd className="text-right tabular-nums">
+        <dd className="text-right whitespace-nowrap tabular-nums">
           {value === "not_applicable" ? (
             <span className="text-muted-ink">Not applicable</span>
           ) : isTbd(value) ? (
