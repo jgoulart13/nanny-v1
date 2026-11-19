@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { buttonClass } from "@/components/ui/button";
 import { readingList, readingListMonth } from "@/lib/readingList";
+import { StoryLetter } from "@/components/story-letter";
 import heroImage from "@/public/hero.webp";
 
 // Home page below the hero follows design-explorations/README.md:
@@ -12,35 +13,41 @@ import heroImage from "@/public/hero.webp";
 const heroAlt =
   "A sunlit kitchen table with a coffee mug, a toddler's sippy cup and a notebook of handwritten numbers.";
 
-// Guide band (blush, cream cards), copy from artboard 11.
+// Guide band (blush, cream cards), copy from step 02e (artboard 11, streamlined).
 const guideCards = [
   {
-    title: "Trusting a stranger with your child",
-    teaser: "Agencies screen candidates, check references and stand behind a placement. Here's what that costs, and what you get for it.",
-    link: "What agencies charge",
+    title: "Trusting someone new",
+    teaser: "What agencies do, and what they charge.",
+    link: "Agency fees",
     href: "/guides/nanny-agency-fees-boston",
   },
   {
-    title: "Not knowing what's fair to pay",
-    teaser: "Public numbers disagree, and most are asking rates. We put the sources side by side so you can see the real range.",
-    link: "What Boston nannies earn",
+    title: "What's fair to pay?",
+    teaser: "Real Boston numbers, side by side.",
+    link: "Nanny pay",
     href: "/guides/boston-nanny-wages",
   },
   {
-    title: "Becoming an employer overnight",
-    teaser: "Hiring a nanny usually makes you a household employer, with taxes and paperwork you've never done before.",
-    link: "Nanny taxes in Massachusetts",
+    title: "Surprise, you're an employer",
+    teaser: "Taxes and paperwork, made simple.",
+    link: "Nanny taxes",
     href: "/guides/massachusetts-nanny-taxes",
+  },
+  {
+    title: "Nanny or daycare?",
+    teaser: "What each really costs, and how families decide.",
+    link: "Nanny vs. daycare",
+    href: "/guides/nanny-vs-daycare-boston",
   },
 ];
 
-// Story timeline, copy from artboard 11 (approved for v1, 2026-11-17).
+// Story timeline, copy from step 02e (approved).
 const timeline = [
-  { when: "First", what: "A night doula", detail: "Help through the newborn nights." },
-  { when: "Then", what: "A nanny", detail: "Found through a Facebook group, after a lot of interviews." },
-  { when: "Suddenly", what: "A family emergency", detail: "Our nanny had to step away, and we had no care." },
-  { when: "Next", what: "The daycare scramble", detail: "Tours, waitlists and a whole new set of prices." },
-  { when: "Now", what: "Writing it down", detail: "So the next family has it all in one place." },
+  { when: "First", what: "A night nanny", detail: "The newborn nights." },
+  { when: "Then", what: "A nanny", detail: "Found her on Facebook." },
+  { when: "Suddenly", what: "An emergency", detail: "Our nanny had to step away." },
+  { when: "Next", what: "Daycare in a crunch", detail: "Tours and waitlists, fast." },
+  { when: "Now", what: "This site", detail: "So you don't start from zero." },
 ];
 
 /** Small rounded label above a section heading (blush or sage, ink text). */
@@ -82,12 +89,10 @@ export default function HomePage() {
             <div className="max-w-xl">
               <p className="eyebrow mb-3 text-ink">Boston · 2026</p>
               <h1 className="text-4xl leading-tight sm:text-5xl">
-                Finding someone to care for your child is personal. Knowing
-                what it costs shouldn&apos;t be a mystery.
+                Childcare is personal. The price shouldn&apos;t be a mystery.
               </h1>
               <p className="mt-5 text-lg text-ink">
-                Honest, sourced numbers for wages, employer taxes and agency
-                fees, so you can plan with a clear head.
+                Straight answers from Boston parents who just went through it.
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/guides" className={buttonClass({ size: "lg" })}>
@@ -111,9 +116,9 @@ export default function HomePage() {
           <h2 id="journey" className="text-3xl sm:text-4xl">
             The part no one prepares you for
           </h2>
-          <ul className="mt-8 grid gap-4 md:grid-cols-3">
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {guideCards.map((g) => (
-              <li key={g.href} className="flex flex-col rounded-xl bg-cream p-7">
+              <li key={g.href} className="flex flex-col rounded-xl bg-cream p-6">
                 <h3 className="font-heading text-[22px] leading-snug font-normal">{g.title}</h3>
                 <p className="mt-2.5 flex-1 text-base">{g.teaser}</p>
                 <Link href={g.href} className="text-link mt-5 font-medium">
@@ -126,13 +131,12 @@ export default function HomePage() {
       </section>
 
       {/* --- Why we're doing this: timeline + letter card (artboard 11) --- */}
-      {/* TODO(jonathan): revisit story copy */}
       <section aria-labelledby="story">
         <div className="mx-auto max-w-5xl px-5 py-16 sm:py-24">
           <div className="mx-auto max-w-3xl text-center">
             <SectionTag tone="sage">Why we&apos;re doing this</SectionTag>
             <h2 id="story" className="mt-4 text-3xl leading-tight sm:text-[40px]">
-              Our first year, in five kinds of help
+              We&apos;ve been there.
             </h2>
           </div>
 
@@ -157,16 +161,7 @@ export default function HomePage() {
 
           <div className="mx-auto mt-14 max-w-[680px] rounded-[18px] border border-sand-light bg-white px-6 py-10 sm:px-13 sm:pt-12 sm:pb-11">
             <h3 className="font-heading text-[30px] leading-tight font-normal">We&apos;re Boston parents too.</h3>
-            <p className="mt-4 text-lg">
-              We searched Facebook groups, asked every parent we knew, and
-              talked to agencies, and we still had no idea what was fair to pay
-              or what we&apos;d signed up for as employers.
-            </p>
-            <p className="mt-3.5 text-lg">
-              So we started writing down what we learned, so the next family
-              doesn&apos;t have to piece it together at 10pm. Everything here is
-              sourced, dated, and written for parents, not for agencies.
-            </p>
+            <StoryLetter />
             <div className="mt-7 flex flex-wrap items-baseline justify-between gap-3">
               <p className="font-heading text-[21px] italic">Jonathan &amp; Talia · Jamaica Plain</p>
               <Link href="/how-it-works#our-story" className="text-link font-medium">
@@ -186,7 +181,7 @@ export default function HomePage() {
               Five things worth your 10pm
             </h2>
             <p className="mt-3 text-muted-ink">
-              Useful things we&apos;ve found, with the takeaway in our own words.
+              Quick reads, in plain English.
             </p>
           </div>
 

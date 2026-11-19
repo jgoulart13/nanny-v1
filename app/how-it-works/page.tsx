@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { PageIntro, PageShell } from "@/components/page-intro";
+import { StoryLetter } from "@/components/story-letter";
 
 export const metadata: Metadata = {
   title: "How it works",
@@ -15,23 +16,11 @@ export default function HowItWorksPage() {
         title="How it works"
         description="We work for families, not agencies. Here’s who we are and how we’re funded."
       />
-      {/* Full story (approved for v1, 2026-11-17). The home page links here. */}
-      {/* TODO(jonathan): revisit story copy */}
+      {/* Full story: the same letter as the home page card (components/story-letter.tsx). */}
       <section id="our-story" className="prose-width mt-14 scroll-mt-8">
         <h2 className="text-3xl">Our story</h2>
         <p className="mt-4 font-heading text-2xl text-ink">We&apos;re Boston parents too.</p>
-        <p className="mt-4">
-          In our son&apos;s first year we did almost all of it: a night doula, a
-          nanny, then a scramble for daycare when our nanny had a family
-          emergency. We searched Facebook groups, asked every parent we knew,
-          and talked to agencies, and we still had no idea what was fair to pay
-          or what we&apos;d signed up for as employers.
-        </p>
-        <p className="mt-4">
-          We started writing down what we learned so the next family
-          doesn&apos;t have to piece it together at 10pm. Everything here is
-          sourced, dated, and written for parents, not for agencies.
-        </p>
+        <StoryLetter className="" />
         <p className="mt-4 font-heading text-xl italic text-ink">Jonathan &amp; Talia, Jamaica Plain</p>
       </section>
 
