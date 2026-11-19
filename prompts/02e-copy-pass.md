@@ -16,7 +16,7 @@ Heading unchanged: "The part no one prepares you for." The cards wrap 4 across o
 | Surprise, you're an employer | Taxes and paperwork, made simple. | Nanny taxes → `/guides/massachusetts-nanny-taxes` |
 | Nanny or daycare? | What each really costs, and how families decide. | Nanny vs. daycare → `/guides/nanny-vs-daycare-boston` |
 
-Create the 4th guide stub `content/guides/nanny-vs-daycare-boston.mdx` the same way as the other three (frontmatter, "The short answer" placeholder, section headings, `TODO: draft`, noindex). Sources to list in its frontmatter: U.S. DOL National Database of Childcare Prices (county infant/toddler center prices), plus the nanny cost sources already in `data/boston-cost-seed.json`.
+`content/guides/nanny-vs-daycare-boston.mdx` **already exists with a full draft. Don't overwrite it.** Just register it wherever guides are listed (e.g. the loaders in `lib/guides.ts`) so it shows on `/guides` and renders.
 
 ## C. Story section
 - Section heading: **We've been there.** (keep the sage "Why we're doing this" tag above it)
@@ -47,6 +47,6 @@ Create the 4th guide stub `content/guides/nanny-vs-daycare-boston.mdx` the same 
 ## Acceptance
 - [ ] `/` matches artboard 11's copy exactly; no other text on the page changed.
 - [ ] The 4 cards wrap correctly at desktop, tablet and phone widths.
-- [ ] `/guides` lists 4 guides; the new stub is noindex.
+- [ ] `/guides` lists 4 guides and each renders with its sources; all four are still `draft: true` (noindex) until Jonathan approves them.
 - [ ] The header and footer show the goose mark beside the wordmark; the browser tab shows the sage goose icon.
 - [ ] `npm run build` and tests pass.
