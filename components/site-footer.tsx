@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { config } from "@/lib/config";
 
@@ -15,7 +16,21 @@ export function SiteFooter() {
   return (
     <footer className="mt-auto border-t border-sand-light">
       <div className="mx-auto flex max-w-5xl flex-col gap-3 px-5 py-8 text-[15px] text-muted-ink sm:flex-row sm:items-center sm:justify-between">
-        <span className="font-heading text-xl lowercase text-ink">{config.brand}</span>
+        <Link
+          href="/"
+          className="flex w-fit items-center gap-2.5 font-heading text-xl lowercase text-ink"
+          aria-label={`${config.brand} home`}
+        >
+          <Image
+            src="/brand/silly-goose-mark.svg"
+            alt=""
+            width={48}
+            height={34}
+            unoptimized
+            className="h-[34px] w-auto"
+          />
+          <span>{config.brand}</span>
+        </Link>
         <nav aria-label="Footer">
           <ul className="flex flex-wrap gap-x-5 gap-y-1">
             {footerLinks.map((item) => (
