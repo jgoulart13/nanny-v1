@@ -7,13 +7,13 @@ export function PageIntro({
 }: {
   eyebrow?: string;
   title: string;
-  description: string;
+  description?: string;
 }) {
   return (
     <div className="prose-width">
       {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
       <h1 className="text-4xl leading-tight sm:text-5xl">{title}</h1>
-      <p className="mt-4 text-lg text-muted-ink">{description}</p>
+      {description && <p className="mt-4 text-lg text-muted-ink">{description}</p>}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 {
   "market": "Boston, MA",
-  "updated": "2026-11-17",
+  "updated": "2026-11-18",
   "_readme": "Public data is listing/asking-rate or modeled, NOT transacted agency-placed pricing. That gap is what we collect via the quote log. Re-verify every figure before launch.",
   "data_points": [
     {
@@ -268,13 +268,45 @@
       "as_of": "2026-11",
       "confidence": "high",
       "notes": "Family consultation fee."
+    },
+    {
+      "metric": "ma_ui_rate",
+      "segment": "household_employer",
+      "value": 2.42,
+      "unit": "pct_of_wages",
+      "notes": "2026 rate for employers registered less than 3 years (non-construction). A small COVID-19 recovery assessment is added on top; not included here.",
+      "source_name": "Mass. DUA: Employer contributions (unemployment insurance)",
+      "source_url": "https://www.mass.gov/info-details/learn-about-employer-contributions-to-dua",
+      "basis": "government_published",
+      "as_of": "2026",
+      "confidence": "high"
+    },
+    {
+      "metric": "ma_ui_wage_base",
+      "segment": "household_employer",
+      "value": 15000,
+      "unit": "usd_per_year",
+      "notes": "Taxable wage base per employee per calendar year.",
+      "source_name": "Mass. DUA: Employer contributions (unemployment insurance)",
+      "source_url": "https://www.mass.gov/info-details/learn-about-employer-contributions-to-dua",
+      "basis": "government_published",
+      "as_of": "2026",
+      "confidence": "high"
+    },
+    {
+      "metric": "ma_ui_quarterly_threshold",
+      "segment": "household_employer",
+      "value": 1000,
+      "unit": "usd_per_quarter",
+      "notes": "Domestic employers contribute once they pay $1,000+ in cash wages in any quarter.",
+      "source_name": "Mass. DUA: Employer contributions (unemployment insurance)",
+      "source_url": "https://www.mass.gov/info-details/learn-about-employer-contributions-to-dua",
+      "basis": "government_published",
+      "as_of": "2026",
+      "confidence": "high"
     }
   ],
   "assumptions": {
-    "ma_ui_rate": {
-      "value": null,
-      "todo": "TODO(jonathan): confirm the 2026 Massachusetts new-employer UI rate and wage base for household employers with Mass. DUA. Shows 'TBD — collecting' until then."
-    },
     "nanny_share_discount": {
       "value": null,
       "todo": "Collect from families/agencies"

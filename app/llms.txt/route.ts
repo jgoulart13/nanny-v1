@@ -14,7 +14,7 @@ export function GET() {
 - A full-time career nanny in Boston usually costs about $55,000-70,000+ a year in wages ($25-35+ an hour). Job-site averages ($21-25/hr) are asking rates; agency-placed nannies typically earn $30-35/hr.
 - Employer taxes add roughly 8-9% on top of wages: Social Security and Medicare (7.65%) once you pay one household employee $3,000+ in 2026; federal unemployment (about $42/yr); Massachusetts unemployment (2.42% of the first $15,000 for new employers). Massachusetts paid family and medical leave (0.46%) is withheld from the nanny's pay.
 - Massachusetts requires workers' comp insurance, a written agreement, and a timesheet every two weeks when a nanny works 16+ hours a week. Overtime (1.5x over 40 hours a week) applies, including to live-in nannies. Minimum wage is $15/hr.
-- Boston nanny agencies charge either a percentage of first-year pay (one large agency publishes 18%, $7,500 minimum, plus a $500 engagement fee) or a flat fee (another lists $300).
+- Boston nanny agencies that publish their fees charge 15-18% of the nanny's first-year pay (minimums $4,500-7,500) plus a $300-500 upfront fee (Boston Nanny Centre: 18% + $500; The Nanny Haven: 15% + $300).
 - Infant center daycare in Massachusetts averaged about $27,000 a year in 2025 (Child Care Aware of America), the highest of any reporting state; Boston runs higher.
 - Dependent care FSA limit: $7,500 pre-tax in 2026.
 

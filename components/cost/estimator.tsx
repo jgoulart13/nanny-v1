@@ -244,9 +244,14 @@ export function Estimator() {
               )}
             </div>
 
-            {/* Sources panel: every figure this estimate used */}
-            <div className="rounded-lg bg-white p-5 sm:p-6">
-              <p className="font-semibold text-ink">Sources for this estimate</p>
+            {/* Sources: every figure this estimate used, folded away by default.
+                Native <details>: the list is in the HTML (readable with JS off
+                and by AI crawlers), one tap to open. */}
+            <details className="group rounded-lg bg-white p-5 sm:p-6">
+              <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-4 font-semibold text-ink [&::-webkit-details-marker]:hidden">
+                <span>See all {result.sources.length} sources for this estimate</span>
+                <span aria-hidden className="text-pine transition-transform group-open:rotate-45">+</span>
+              </summary>
               <ul className="mt-3 divide-y divide-sand-light text-sm">
                 {result.sources.map((s) => (
                   <li key={`${s.metric}-${s.segment}-${s.source_url}`} className="py-2">
@@ -264,7 +269,7 @@ export function Estimator() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </details>
           </>
         )}
       </div>

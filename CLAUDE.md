@@ -26,7 +26,7 @@ Jonathan is a novice programmer. So:
 2. **Privacy.** Never add fields for child names, birthdates or photos. Age bands only. No sensitive data in logs or analytics events.
 3. **Server-render all content.** Pages must be fully readable with JavaScript off. This matters for AI crawlers.
 4. **Every cost number shows its source.** No invented figures. If data is missing, show "TBD — collecting" rather than a guess.
-5. **Disclosure.** Keep the funding explanation on `/how-it-works#how-we-get-paid` and at the end of the agency-fees guide only. **No disclosure notes on the home page or in the footer** (Jonathan, 2026-11-17).
+5. **Disclosure.** No funding or "how we get paid" sections anywhere for now (Jonathan, 2026-11-18): the site takes no money from anyone. Revisit only if that changes.
 6. **Placeholders.** Use `{{BRAND}}`, `{{DOMAIN}}` and `{{OPERATOR_EMAIL}}` from `lib/config.ts` only. Ask Jonathan for the real values before the first production deploy.
 7. **Secrets** live only in `.env.local` and Vercel environment variables. Keep `.env.example` up to date.
 

@@ -36,7 +36,7 @@ export const siteFaq: FaqItem[] = [
   },
   {
     q: "How much do Boston nanny agencies charge?",
-    a: "Either a percentage of the nanny's first-year pay (one large Boston agency publishes 18%, with a $7,500 minimum) or a smaller flat fee (another lists $300). Ask for the fee in writing, along with what the guarantee covers.",
+    a: "Usually a percentage of the nanny's first-year pay plus an upfront fee. The two Boston agencies that publish theirs charge 15–18% (minimums of $4,500–7,500) plus $300–500 up front. Ask for the fee in writing, along with what the guarantee covers.",
     guide: { href: "/guides/nanny-agency-fees-boston", label: "What nanny agencies charge" },
   },
   {

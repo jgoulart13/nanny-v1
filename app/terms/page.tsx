@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function TermsPage() {
   return (
     <PageShell>
-      <PageIntro title="Terms" description="The short version, in plain English." />
+      <PageIntro title="Terms" />
       <div className="prose-width mt-10 space-y-4">
         <p>
           Silly Goose shares information to help families plan for childcare.
