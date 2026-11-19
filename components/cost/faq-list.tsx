@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { FaqItem } from "@/lib/costFacts";
 
 // Native <details>, so every answer is in the HTML and works without JS.
@@ -23,6 +24,11 @@ export function FaqList({
             </span>
           </summary>
           <p className="mt-2">{f.a}</p>
+          {f.guide && (
+            <Link href={f.guide.href} className="text-link mt-2 inline-block font-medium">
+              {f.guide.label} →
+            </Link>
+          )}
         </details>
       ))}
     </div>

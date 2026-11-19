@@ -1,46 +1,46 @@
 {
-  "_readme": "'Around Boston' digest on the home page (design-explorations/README.md, option F). Takeaways are in our own words, never copied. The home page shows the first 5. Check each URL still loads before publishing. Last checked 2026-11-17.",
-  "month": "November",
-  "items": [
-    {
-      "topic": "Taxes",
-      "title": "Household Employer's Tax Guide (Pub. 926), 2026",
-      "source": "IRS",
-      "url": "https://www.irs.gov/pub/irs-pdf/p926.pdf",
-      "date": "2026",
-      "takeaway": "Pay one household employee $3,000+ this year and Social Security and Medicare apply to all of it."
-    },
-    {
-      "topic": "Paperwork",
-      "title": "Domestic workers: notice of rights and model agreement",
-      "source": "Mass. Attorney General",
-      "url": "https://www.mass.gov/info-details/domestic-workers",
-      "date": "2026-11",
-      "takeaway": "Working 16+ hours a week? Massachusetts requires a written agreement, and the AG gives you a free template."
-    },
-    {
-      "topic": "Taxes",
-      "title": "Paid Family & Medical Leave rates and calculator",
-      "source": "Mass. DFML",
-      "url": "https://www.mass.gov/info-details/paid-family-and-medical-leave-employer-contribution-rates-and-calculator",
-      "date": "2026-10",
-      "takeaway": "A one-nanny household remits 0.46% of wages for paid leave, with no employer share."
-    },
-    {
-      "topic": "Daycare",
-      "title": "National Database of Childcare Prices",
-      "source": "U.S. Dept. of Labor",
-      "url": "https://www.dol.gov/agencies/wb/topics/featured-childcare",
-      "date": "2024",
-      "takeaway": "Daycare prices for every county, including Suffolk, Middlesex and Norfolk. The newest data is from 2022, so expect today's prices to be higher."
-    },
-    {
-      "topic": "Wages",
-      "title": "2026 Salary & Benefits Guide",
-      "source": "The Washburn Agency",
-      "url": "https://washburnagency.com/2026salaryguide/",
-      "date": "2026",
-      "takeaway": "A Boston agency's view of what nannies and household staff are paid, benefits included."
-    }
-  ]
+ "_readme": "'Around Boston' digest on the home page (design-explorations/README.md, option F). Takeaways are in our own words, never copied. The home page shows the first 5. Check each URL still loads before publishing. Last checked 2026-11-18.",
+ "month": "November",
+ "items": [
+  {
+   "topic": "Taxes",
+   "title": "Household Employer's Tax Guide (Pub. 926), 2026",
+   "source": "IRS",
+   "url": "https://www.irs.gov/pub/irs-pdf/p926.pdf",
+   "date": "2026",
+   "takeaway": "Pay one household employee $3,000+ this year and Social Security and Medicare apply to all of it."
+  },
+  {
+   "topic": "Paperwork",
+   "title": "Domestic workers: notice of rights and model agreement",
+   "source": "Mass. Attorney General",
+   "url": "https://www.mass.gov/info-details/domestic-workers",
+   "date": "2026-11",
+   "takeaway": "Working 16+ hours a week? Massachusetts requires a written agreement, and the AG gives you a free template."
+  },
+  {
+   "topic": "Taxes",
+   "title": "Paid Family & Medical Leave rates and calculator",
+   "source": "Mass. DFML",
+   "url": "https://www.mass.gov/info-details/paid-family-and-medical-leave-employer-contribution-rates-and-calculator",
+   "date": "2026-10",
+   "takeaway": "A one-nanny household remits 0.46% of wages for paid leave, with no employer share."
+  },
+  {
+   "topic": "Daycare",
+   "title": "Child Care in America: 2025 Price & Supply",
+   "source": "Child Care Aware of America",
+   "url": "https://info.childcareaware.org/price-and-supply-2025",
+   "date": "2026",
+   "takeaway": "Massachusetts has the priciest infant center care of any state that reported: about $27,000 a year in 2025. Download the Massachusetts fact sheet."
+  },
+  {
+   "topic": "Wages",
+   "title": "2026 Cost of Care Report",
+   "source": "Care.com",
+   "url": "https://www.care.com/c/how-much-does-child-care-cost",
+   "date": "2026",
+   "takeaway": "National posted nanny rates averaged about $870 a week. Boston runs higher, and the report on how parents are coping is worth a read."
+  }
+ ]
 }

@@ -4,12 +4,12 @@ import { FaqList } from "@/components/cost/faq-list";
 import { JsonLd } from "@/components/json-ld";
 import { PageIntro, PageShell } from "@/components/page-intro";
 import { siteUrl } from "@/lib/config";
-import { costFaq } from "@/lib/costFacts";
+import { siteFaq } from "@/lib/faq";
 
 export const metadata: Metadata = {
   title: "Boston nanny cost FAQ",
   description:
-    "Straight answers about Boston nanny costs: hourly rates, yearly cost, employer taxes, agency fees, nanny shares and daycare.",
+    "Straight answers on what a Boston nanny costs: pay, Massachusetts nanny taxes, agency fees, and nanny vs. daycare.",
   alternates: { canonical: "/faq" },
 };
 
@@ -22,7 +22,7 @@ export default function FaqPage() {
           "@context": "https://schema.org",
           "@type": "FAQPage",
           "@id": `${siteUrl}/faq#faq`,
-          mainEntity: costFaq.map((f) => ({
+          mainEntity: siteFaq.map((f) => ({
             "@type": "Question",
             name: f.q,
             acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -32,10 +32,10 @@ export default function FaqPage() {
       <PageIntro
         eyebrow="Boston · Nanny costs"
         title="Frequently asked questions"
-        description="Straight answers about what a Boston nanny costs. Every number comes from a dated, linked source."
+        description="Quick answers. Each one links to a guide with the details and sources."
       />
       <div className="mt-10">
-        <FaqList items={costFaq} open headingLevel="h2" />
+        <FaqList items={siteFaq} open headingLevel="h2" />
       </div>
       <p className="prose-width mt-10 text-[15px] text-muted-ink">
         Every source, with its date:{" "}

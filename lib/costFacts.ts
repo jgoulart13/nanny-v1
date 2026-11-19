@@ -90,7 +90,14 @@ export const answerFirst = [
 
 // --- FAQ (plain text, so it can go straight into FAQPage JSON-LD) -----------
 
-export type FaqItem = { q: string; a: string; /** Show on the pillar page (max 3). */ pillar?: boolean };
+export type FaqItem = {
+  q: string;
+  a: string;
+  /** Show on the pillar page (max 3). */
+  pillar?: boolean;
+  /** "Read the guide" link under the answer. */
+  guide?: { href: string; label: string };
+};
 
 const feeSentence = agencyFeeExamples
   .map((a) => `${a.agency} charges ${a.formula}`)
