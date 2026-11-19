@@ -12,7 +12,6 @@ import { figureLabel, formatValue } from "@/lib/costLabels";
 
 /** Figures we know we need but don't have yet (assumptions with value: null). */
 const pending = [
-  { label: "Mass. unemployment insurance rate", key: "ma_ui_rate" },
   { label: "Nanny share split", key: "nanny_share_discount" },
 ] as const;
 

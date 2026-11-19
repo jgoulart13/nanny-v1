@@ -29,7 +29,6 @@ function withKnownAssumptions(): CostModel {
   return {
     ...costData,
     assumptions: {
-      ma_ui_rate: { value: 0.02 },
       nanny_share_discount: { value: 0.4 },
     },
   };
@@ -64,12 +63,12 @@ describe("full-time", () => {
     expect(e.annualWages.high).toBeCloseTo(22.66 * 40 * WEEKS_PER_YEAR);
   });
 
-  it("employer taxes: 7.65% FICA, FUTA on the first $7,000, $0 PFML share, MA UI TBD", () => {
+  it("employer taxes: 7.65% FICA, FUTA on the first $7,000, $0 PFML share, MA UI 2.42% of the first $15,000", () => {
     expect(asRange(line(e, "fica").value).low).toBeCloseTo(22.61 * 40 * 52 * 0.0765);
     expect(asRange(line(e, "futa").value)).toEqual({ low: 42, mid: 42, high: 42 });
     expect(asRange(line(e, "pfml").value).mid).toBe(0);
-    expect(isTbd(line(e, "ma_ui").value)).toBe(true);
-    expect(e.employerTaxes.pending).toEqual(["Mass. unemployment insurance"]);
+    expect(asRange(line(e, "ma_ui").value)).toEqual({ low: 363, mid: 363, high: 363 });
+    expect(e.employerTaxes.pending).toEqual([]);
   });
 
   it("agency fees: range across the two agencies that publish theirs", () => {
@@ -87,7 +86,7 @@ describe("full-time", () => {
     expect(e.annualAllIn.known.low).toBeCloseTo(
       e.annualWages.low + e.employerTaxes.known.low + fee.range.low,
     );
-    expect(e.annualAllIn.pending).toEqual(["Mass. unemployment insurance"]);
+    expect(e.annualAllIn.pending).toEqual([]);
     expect(e.familyShareHourly).toBe("not_applicable");
   });
 
@@ -134,8 +133,8 @@ describe("nanny share", () => {
 
 describe("missing data", () => {
   it("never invents a number: TBD carries a reason", () => {
-    const ui = line(estimate(input()), "ma_ui").value;
-    expect(isTbd(ui) && ui.reason.length).toBeGreaterThan(10);
+    const share = estimate(input({ arrangement: "nanny_share" })).familyShareHourly;
+    expect(isTbd(share) && share.reason.length).toBeGreaterThan(10);
   });
 
   it("an independent hire has no placement fee", () => {
@@ -179,10 +178,15 @@ describe("missing data", () => {
     expect(e.caveats.join(" ")).toMatch(/don't have part-time rates/);
   });
 
-  it("all-in is complete once MA UI is known", () => {
+  it("all-in is complete for a full-time agency hire", () => {
     const e = estimate(input({ youngestAgeBand: "3_5y" }), withKnownAssumptions());
     expect(e.annualAllIn.pending).toEqual([]);
-    expect(asRange(line(e, "ma_ui").value).mid).toBeCloseTo(e.annualWages.mid * 0.02);
+    expect(asRange(line(e, "ma_ui").value).mid).toBeCloseTo(15000 * 0.0242);
+  });
+
+  it("no Mass. UI under $1,000 a quarter", () => {
+    const e = estimate(input({ arrangement: "part_time", hoursPerWeek: 3 }));
+    expect(asRange(line(e, "ma_ui").value).low).toBe(0);
   });
 
   it("flags what the data doesn't cover", () => {

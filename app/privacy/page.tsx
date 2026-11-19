@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <PageShell>
-      <PageIntro title="Privacy" description="The short version, in plain English." />
+      <PageIntro title="Privacy" />
       <div className="prose-width mt-10 space-y-4">
         <p>You don&apos;t need an account or to tell us who you are to use this site.</p>
         <p>

@@ -26,9 +26,8 @@ export default function EstimatePage() {
           Estimate your nanny cost
         </h1>
         <p className="mt-5 text-lg">
-          Wages, employer taxes and agency fees for your situation. Anything we
-          can&apos;t source yet shows as &ldquo;TBD — collecting&rdquo; instead
-          of a guess.
+          Wages, employer taxes and agency fees for your situation. Every
+          number is sourced.
         </p>
       </header>
 

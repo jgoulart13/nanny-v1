@@ -1,6 +1,6 @@
 # Step 02e — Home page copy pass (shorter, warmer) + daycare card + logo
 
-Talia's feedback: the home page was wordy and heady. Jonathan approved a streamlined version on **artboard 11** of the canvas (https://claude.ai/artifact/SPVJkBh5CkvcASqc95Aqy4). Change **copy only**, plus one new card and one new guide stub. The layout stays as it is.
+Taliya's feedback: the home page was wordy and heady. Jonathan approved a streamlined version on **artboard 11** of the canvas (https://claude.ai/artifact/SPVJkBh5CkvcASqc95Aqy4). Change **copy only**, plus one new card and one new guide stub. The layout stays as it is.
 
 ## A. Hero
 - H1: **Childcare is personal. The price shouldn't be a mystery.**

@@ -163,7 +163,7 @@ export default function HomePage() {
             <h3 className="font-heading text-[30px] leading-tight font-normal">We&apos;re Boston parents too.</h3>
             <StoryLetter />
             <div className="mt-7 flex flex-wrap items-baseline justify-between gap-3">
-              <p className="font-heading text-[21px] italic">Jonathan &amp; Talia · Jamaica Plain</p>
+              <p className="font-heading text-[21px] italic">Jonathan &amp; Taliya · Jamaica Plain</p>
               <Link href="/how-it-works#our-story" className="text-link font-medium">
                 Read our story →
               </Link>
@@ -209,7 +209,7 @@ export default function HomePage() {
                 </li>
               ))}
             </ol>
-            <p className="mt-5 font-heading text-[19px] italic">— Jonathan &amp; Talia</p>
+            <p className="mt-5 font-heading text-[19px] italic">— Jonathan &amp; Taliya</p>
           </div>
           <p className="mt-7 text-center">
             <Link href="/guides" className="text-link font-medium">

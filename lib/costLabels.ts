@@ -22,6 +22,9 @@ const metricLabel: Record<DataPoint["metric"], string> = {
   futa_wage_base: "FUTA applies to wages up to",
   ma_pfml_rate: "Mass. paid leave (PFML), total",
   ma_pfml_employer_rate: "Mass. paid leave (PFML), employer share",
+  ma_ui_rate: "Mass. unemployment, new-employer rate",
+  ma_ui_wage_base: "Mass. unemployment applies to wages up to",
+  ma_ui_quarterly_threshold: "Mass. unemployment starts at",
   placement_fee_min: "Minimum placement fee",
   upfront_fee: "Upfront fee",
 };

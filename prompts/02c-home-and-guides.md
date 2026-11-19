@@ -36,7 +36,7 @@ Nav (upper right): **Guides** · **Estimate** · **FAQ** · **About**.
 > **We're Boston parents too.**
 > In our son's first year we did almost all of it: a night doula, a nanny, then a scramble for daycare when our nanny had a family emergency. We searched Facebook groups, asked every parent we knew, and talked to agencies, and we still had no idea what was fair to pay or what we'd signed up for as employers.
 > We started writing down what we learned so the next family doesn't have to piece it together at 10pm. Everything here is sourced, dated, and written for parents, not for agencies.
-> *Jonathan & Talia, Jamaica Plain*
+> *Jonathan & Taliya, Jamaica Plain*
 
 ## Seed for `data/reading-list.json`
 | Title | Source | URL | Takeaway (our words) |

@@ -284,15 +284,12 @@ export function employerTaxBreakdown(
   );
   const pfml = perEnd(annualWages, (w) => w * pct(pfmlEmployer));
 
-  const uiRate = model.assumptions.ma_ui_rate.value;
-  const ui: Range | Tbd =
-    uiRate === null
-      ? {
-          tbd: true,
-          reason:
-            "We're confirming the 2026 Massachusetts unemployment rate for household employers.",
-        }
-      : scale(annualWages, uiRate);
+  const uiRate = requirePoint(model, "ma_ui_rate");
+  const uiBase = requirePoint(model, "ma_ui_wage_base");
+  const uiQuarter = requirePoint(model, "ma_ui_quarterly_threshold");
+  const ui = perEnd(annualWages, (w) =>
+    w / 4 >= uiQuarter.value ? Math.min(w, uiBase.value) * pct(uiRate) : 0,
+  );
 
   const lines: Line[] = [
     {
@@ -320,7 +317,8 @@ export function employerTaxBreakdown(
       key: "ma_ui",
       label: "Mass. unemployment insurance",
       value: ui,
-      sources: [],
+      note: `${uiRate.value}% of the first ${usd(uiBase.value)} (new employers), plus a small state assessment`,
+      sources: [uiRate, uiBase, uiQuarter],
     },
   ];
 

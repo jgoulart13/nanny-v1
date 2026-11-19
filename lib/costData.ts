@@ -26,6 +26,9 @@ export const metricSchema = z.enum([
   "futa_wage_base",
   "ma_pfml_rate",
   "ma_pfml_employer_rate",
+  "ma_ui_rate",
+  "ma_ui_wage_base",
+  "ma_ui_quarterly_threshold",
   // Agency fees (agency-disclosed)
   "placement_fee_min",
   "upfront_fee",
@@ -79,7 +82,6 @@ export const costModelSchema = z.object({
   updated: z.iso.date(),
   data_points: z.array(dataPointSchema).min(1),
   assumptions: z.object({
-    ma_ui_rate: assumptionSchema,
     nanny_share_discount: assumptionSchema,
   }),
 });
