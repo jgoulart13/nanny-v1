@@ -13,6 +13,7 @@ A content-first, agent-discoverable site for Boston parents on what childcare re
 - **About:** story only. **Privacy and terms:** short and plain. No funding or "how we get paid" sections (CLAUDE.md rule 5).
 - **Estimator `/estimate`:** Mass. unemployment uses the real Mass. DUA rate (2.42% of the first $15,000); sources are in a dropdown. The "Email me this estimate" card is a disabled placeholder.
 - **AI discoverability:** `/llms.txt`, an explicit AI-crawler allow list in `robots.ts`, Organization/WebSite/Article/FAQPage structured data, a sitemap, and permanent redirects from the old `/boston/nanny-cost*` pages to the guides.
+- **Agent surface, estimate only (step 04b):** `GET /api/estimate` (sourced JSON, no key, no personal data), `/openapi.json`, and a remote MCP server at `/mcp` with one tool, `estimate_nanny_cost` (mcp-handler 2.x, Streamable HTTP). API and MCP share `lib/estimateResponse.ts`, so they always agree with `/estimate`. **Brief tools (`submit_family_brief`, `POST /api/brief`) wait for G0.** After deploy: add the Claude custom connector and the Vercel Firewall rate-limit rule (TODOs in `app/api/estimate/route.ts` and `app/mcp/route.ts`).
 
 ## Next, in order
 1. **Deploy:** buy a domain, connect GitHub to Vercel, and set `domain` and `operatorEmail` in `lib/config.ts` (still placeholders).

@@ -31,6 +31,11 @@ export function GET() {
 - [FAQ](${u("/faq")}): short answers, each linked to its guide
 - [About us](${u("/how-it-works")}): who writes this and why
 - [Estimate your cost](${u("/estimate")}): calculator
+
+## For AI agents
+
+- [Cost estimate API](${u("/api/estimate?hoursPerWeek=40&children=1&youngestAgeBand=1_2y&liveIn=false&arrangement=full_time&viaAgency=true")}): JSON, sourced. Documented at ${u("/openapi.json")}
+- MCP server: ${u("/mcp")} (tool: estimate_nanny_cost)
 `;
   return new Response(body, {
     headers: { "Content-Type": "text/plain; charset=utf-8" },
