@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { config, siteUrl } from "@/lib/config";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { JsonLd } from "@/components/json-ld";
 
 // design.md: soft serif for H1/H2, clean light sans for body and UI.
 // Headings: Newsreader, regular weight (design.md "Typography", 2026-11-17).
@@ -33,6 +34,32 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={cn("h-full antialiased", newsreader.variable, figtree.variable)}
     >
       <body className="flex min-h-full flex-col">
+        {/* Who we are, for search engines and AI assistants. */}
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "Organization",
+                "@id": `${siteUrl}/#org`,
+                name: config.brand,
+                url: siteUrl,
+                logo: `${siteUrl}/brand/silly-goose-icon.svg`,
+                description:
+                  "Plain-English, sourced guides to what childcare costs in Boston, written by Boston parents.",
+                areaServed: { "@type": "City", name: "Boston, MA" },
+              },
+              {
+                "@type": "WebSite",
+                "@id": `${siteUrl}/#website`,
+                name: config.brand,
+                url: siteUrl,
+                publisher: { "@id": `${siteUrl}/#org` },
+                inLanguage: "en-US",
+              },
+            ],
+          }}
+        />
         <SiteHeader />
         {children}
         <SiteFooter />

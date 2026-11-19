@@ -7,6 +7,8 @@ import type { ComponentType } from "react";
 import { z } from "zod";
 
 const loaders = {
+  // The main guide first: it answers the question families (and AI assistants) ask most.
+  "boston-nanny-cost": () => import("@/content/guides/boston-nanny-cost.mdx"),
   "nanny-agency-fees-boston": () => import("@/content/guides/nanny-agency-fees-boston.mdx"),
   "boston-nanny-wages": () => import("@/content/guides/boston-nanny-wages.mdx"),
   "massachusetts-nanny-taxes": () => import("@/content/guides/massachusetts-nanny-taxes.mdx"),

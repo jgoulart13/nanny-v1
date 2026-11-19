@@ -2,8 +2,8 @@
 // Every public, indexable page, in one list. The sitemap reads from here.
 // Hidden on purpose (docs/04-prd-v1.md scope change, 2026-11-15):
 //   /brief and /for-agencies: noindex, never linked, code kept for later.
-//   /boston/nanny-cost and its /boston/nanny-cost/* stubs: on hold (step 02c),
-//     noindex, unlinked. Content moves into /guides.
+//   /boston/nanny-cost and its /boston/nanny-cost/* stubs: permanently
+//     redirected to /guides (next.config.ts, 2026-11-18).
 // Guides are added to the sitemap by app/sitemap.ts once they're not drafts.
 
 export type PublicRoute = {
