@@ -17,6 +17,7 @@
     "@next/mdx": "^16.4.5",
     "@remixicon/react": "^4.9.0",
     "@types/mdx": "^2.0.14",
+    "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.2",
     "mcp-handler": "^2.4.0",
