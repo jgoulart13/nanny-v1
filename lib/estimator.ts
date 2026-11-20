@@ -89,6 +89,14 @@ export type AgencyFee = {
   sources: DataPoint[];
 };
 
+/** A cost line outside the tax breakdown (workers' comp, paid time off). */
+export type CostLine = {
+  label: string;
+  value: Range | Tbd | "not_required";
+  note: string;
+  sources: DataPoint[];
+};
+
 export type Estimate = {
   /** Which group of data points the hourly range came from. */
   segment: "agency_placed" | "newborn" | "part_time" | "general";
@@ -104,8 +112,19 @@ export type Estimate = {
   placementFee: { range: Range; byAgency: AgencyFee[] } | Tbd | "not_applicable";
   /** Nanny share only: what one family pays per hour. */
   familyShareHourly: Range | Tbd | "not_applicable";
-  /** First-year total: wages + employer taxes + agency fee. */
-  annualAllIn: { known: Range; pending: string[] };
+  /** Workers' comp insurance: a premium, TBD, or not required under the hours threshold. */
+  workersComp: CostLine;
+  /** Paid time off: shown for information, never added to the total. */
+  paidTimeOff: CostLine;
+  /** First-year total: wages + employer taxes + workers' comp + agency fee. */
+  annualAllIn: {
+    known: Range;
+    pending: string[];
+    /** What the known total adds up, e.g. ["wages", "employer taxes", "agency fee"]. */
+    includes: string[];
+  };
+  /** Lines shown but deliberately left out of the total (e.g. paid time off). */
+  excludedFromTotal: string[];
   /** Data points behind the hourly rate. */
   hourlySources: DataPoint[];
   /** Every data point used anywhere in this estimate. */
@@ -224,20 +243,34 @@ export function estimate(
     );
   }
 
+  // 6b. Workers' comp: required in Massachusetts from a weekly-hours threshold.
+  const workersComp = workersCompLine(inputs.hoursPerWeek, model);
+
+  // 6c. Paid time off: not required by law. Wages above already count all 52
+  //     weeks as paid, so PTO is shown for information and never added again.
+  const paidTimeOff = paidTimeOffLine(weekly, model);
+
   // 7. All-in (first year): add up what we know, list what we don't.
   const pending = [...employerTaxes.pending];
+  if (isTbd(workersComp.value)) pending.push("Workers' comp insurance");
   if (isTbd(placementFee)) pending.push("Agency placement fee");
   if (isTbd(familyShareHourly)) pending.push("Your family's share of a nanny share");
+  const includes = ["wages", "employer taxes"];
+  if (isRange(workersComp.value)) includes.push("workers' comp");
+  if (placementFee !== "not_applicable" && !isTbd(placementFee)) includes.push("agency fee");
   const annualAllIn = {
     known: sumRanges([
       annualWages,
       employerTaxes.known,
+      isRange(workersComp.value) ? workersComp.value : ZERO,
       placementFee === "not_applicable" || isTbd(placementFee)
         ? ZERO
         : placementFee.range,
     ]),
     pending,
+    includes,
   };
+  const excludedFromTotal = ["Paid time off"];
 
   // 8. Things the data doesn't cover yet.
   if (inputs.hoursPerWeek > 40) {
@@ -262,6 +295,8 @@ export function estimate(
   const used = [
     ...hourlySources,
     ...employerTaxes.lines.flatMap((l) => l.sources),
+    ...workersComp.sources,
+    ...paidTimeOff.sources,
     ...(placementFee !== "not_applicable" && !isTbd(placementFee)
       ? placementFee.byAgency.flatMap((a) => a.sources)
       : []),
@@ -276,7 +311,10 @@ export function estimate(
     employerTaxes,
     placementFee,
     familyShareHourly,
+    workersComp,
+    paidTimeOff,
     annualAllIn,
+    excludedFromTotal,
     hourlySources,
     sources: [...new Set(used)],
     caveats,
@@ -357,6 +395,66 @@ export function employerTaxBreakdown(
     lines,
     known: sumRanges(lines.map((l) => l.value).filter((v): v is Range => !isTbd(v))),
     pending: lines.filter((l) => isTbd(l.value)).map((l) => l.label),
+  };
+}
+
+// --- Workers' comp and paid time off ------------------------------------------------
+
+export function isRange(x: unknown): x is Range {
+  return typeof x === "object" && x !== null && "low" in x && "high" in x;
+}
+
+export function workersCompLine(hoursPerWeek: number, model: CostModel = costData): CostLine {
+  const threshold = pointsFor(model, "workers_comp_hours_threshold")[0];
+  const minHours = threshold?.value ?? 16;
+  const label = `Workers' comp insurance (required at ${minHours}+ hrs/week in Massachusetts)`;
+  const thresholdSources = threshold ? [threshold] : [];
+
+  if (hoursPerWeek < minHours) {
+    return {
+      label,
+      value: "not_required",
+      note: `Not required under ${minHours} hrs/week.`,
+      sources: thresholdSources,
+    };
+  }
+  const premium = pointsFor(model, "workers_comp_annual")[0];
+  if (!premium) {
+    return {
+      label,
+      value: {
+        tbd: true,
+        reason:
+          "We haven't found a published Massachusetts premium for one household employee that we can cite. Get a quote from a nanny payroll service or insurer.",
+      },
+      note: "Required by Massachusetts law at this many hours. Premium: TBD — collecting.",
+      sources: thresholdSources,
+    };
+  }
+  return {
+    label,
+    value: { low: premium.value, mid: premium.value, high: premium.value },
+    note: "Yearly premium for one household employee.",
+    sources: [...thresholdSources, premium],
+  };
+}
+
+export function paidTimeOffLine(weekly: Range, model: CostModel = costData): CostLine {
+  const label = "Paid time off (not required by law; most families offer it)";
+  const weeks = pointsFor(model, "paid_vacation_weeks")[0];
+  if (!weeks) {
+    return {
+      label,
+      value: { tbd: true, reason: "We're collecting what Boston families typically offer." },
+      note: "Not included in the all-in total.",
+      sources: [],
+    };
+  }
+  return {
+    label,
+    value: scale(weekly, weeks.value),
+    note: `Not included in the all-in total. ${weeks.value} weeks of paid vacation is typical; that's already inside the 52-week wages above, so it isn't added again. Paid holidays and sick days aren't included.`,
+    sources: [weeks],
   };
 }
 

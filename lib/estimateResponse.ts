@@ -56,8 +56,8 @@ export type AgentSource = {
 
 export type AgentLine = {
   label: string;
-  /** Whole dollars, or TBD (never a guess), or not applicable. */
-  value: Range | { tbd: true; reason: string } | "not_applicable";
+  /** Whole dollars, or TBD (never a guess), or not applicable / not required. */
+  value: Range | { tbd: true; reason: string } | "not_applicable" | "not_required";
   note?: string;
   sources: AgentSource[];
 };
@@ -68,8 +68,12 @@ export type AgentResponse = {
     wages: AgentLine;
     employer_taxes: { total_known: AgentLine; lines: AgentLine[] };
     agency_fees: AgentLine;
+    workers_comp: AgentLine;
     all_in: AgentLine;
   };
+  /** Shown for information; NOT part of annual.all_in (see excluded_from_total). */
+  paid_time_off: AgentLine;
+  excluded_from_total: string[];
   hourly: AgentLine;
   /** Which hourly rates were used: agency_placed (via an agency) or job_site (on your own). */
   rate_basis: { kind: "agency_placed" | "job_site"; explanation: string };
@@ -178,12 +182,18 @@ export function toAgentResponse(raw: AgentInputs = {}): AgentResponse {
         lines: taxLines,
       },
       agency_fees: agencyFees,
+      workers_comp: {
+        label: e.workersComp.label,
+        value: e.workersComp.value === "not_required" ? "not_required" : value(e.workersComp.value),
+        note: e.workersComp.note,
+        sources: sources(e.workersComp.sources),
+      },
       all_in: {
-        label: "All-in, first year",
+        label: `All-in, first year (${e.annualAllIn.includes.join(", ")})`,
         value: round(e.annualAllIn.known),
         note: tbdLines.length
-          ? `Wages + employer taxes + agency fees. Not yet included: ${tbdLines.join(", ")}.`
-          : "Wages + employer taxes + agency fees.",
+          ? `Not yet included: ${tbdLines.join(", ")}. Paid time off is never added (it's already inside 52 weeks of wages).`
+          : "Paid time off is never added (it's already inside 52 weeks of wages).",
         sources: sources(e.sources),
       },
     },
@@ -194,6 +204,13 @@ export function toAgentResponse(raw: AgentInputs = {}): AgentResponse {
       sources: sources(e.hourlySources),
     },
     rate_basis: e.rateBasis,
+    paid_time_off: {
+      label: e.paidTimeOff.label,
+      value: e.paidTimeOff.value === "not_required" ? "not_required" : value(e.paidTimeOff.value),
+      note: e.paidTimeOff.note,
+      sources: sources(e.paidTimeOff.sources),
+    },
+    excluded_from_total: e.excludedFromTotal,
     tbd_lines: tbdLines,
     caveats: e.caveats,
     as_of: costData.updated,
@@ -236,13 +253,17 @@ export function summarize(r: AgentResponse): string {
   const parts = [
     `wages ${rangeText(r.annual.wages.value)}`,
     `employer taxes about ${rangeText(r.annual.employer_taxes.total_known.value)}`,
-    i.viaAgency ? `agency fees ${rangeText(r.annual.agency_fees.value)}` : null,
+    i.viaAgency ? `a one-time agency placement fee of ${rangeText(r.annual.agency_fees.value)}` : null,
   ].filter(Boolean);
   const tbd = r.tbd_lines.length ? ` Still being collected: ${r.tbd_lines.join(", ")}.` : "";
+  const feeNote = i.viaAgency
+    ? " The agency placement fee is a one-time cost, so year two costs less."
+    : "";
+  const ptoNote = " Paid time off isn't added on top (52 weeks of wages already covers paid vacation).";
   return (
     `A ${arrangementText[i.arrangement]} nanny (${i.hoursPerWeek} hours a week) for ${kids} in Boston, ${how}, ` +
     `costs about ${rangeText(r.annual.all_in.value)} in year one, all-in (${parts.join(", ")}). ` +
-    `${r.rate_basis.explanation} Figures are 2026 Boston/Massachusetts numbers, each with a source below.${tbd} ` +
+    `${r.rate_basis.explanation}${feeNote}${ptoNote} Figures are 2026 Boston/Massachusetts numbers, each with a source below.${tbd} ` +
     `Full explanation: ${r.guide_url} · Interactive estimator: ${r.estimator_url}. ${r.disclaimer}`
   );
 }

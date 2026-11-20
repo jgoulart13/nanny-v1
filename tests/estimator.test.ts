@@ -107,7 +107,7 @@ describe("full-time, through an agency (agency-placed rates)", () => {
     expect(e.annualAllIn.known.low).toBeCloseTo(
       e.annualWages.low + e.employerTaxes.known.low + fee.range.low,
     );
-    expect(e.annualAllIn.pending).toEqual([]);
+    expect(e.annualAllIn.pending).toEqual(["Workers' comp insurance"]);
     expect(e.familyShareHourly).toBe("not_applicable");
   });
 
@@ -199,9 +199,9 @@ describe("missing data", () => {
     expect(e.caveats.join(" ")).toMatch(/don't have part-time rates/);
   });
 
-  it("all-in is complete for a full-time agency hire", () => {
+  it("all-in for a full-time agency hire: only workers' comp is still TBD", () => {
     const e = estimate(input({ youngestAgeBand: "3_5y" }), withKnownAssumptions());
-    expect(e.annualAllIn.pending).toEqual([]);
+    expect(e.annualAllIn.pending).toEqual(["Workers' comp insurance"]);
     expect(asRange(line(e, "ma_ui").value).mid).toBeCloseTo(15000 * 0.0242);
   });
 
@@ -256,8 +256,8 @@ describe("helpers", () => {
 describe("consistency with /llms.txt", () => {
   it("default inputs (agency, full-time, 40 h) give wages consistent with the \"$55–70k+\" in /llms.txt", async () => {
     const text = await llmsTxt().text();
-    // e.g. "costs about $55,000-70,000+ a year in wages"
-    const m = text.match(/\$(\d{2,3}),000[-–](\d{2,3}),000\+ a year in wages/);
+    // e.g. "Wages: a full-time career nanny in Boston usually earns about $55,000-70,000+ a year"
+    const m = text.match(/earns about \$(\d{2,3}),000[-–](\d{2,3}),000\+ a year/);
     expect(m, "/llms.txt no longer states a full-time wage range").not.toBeNull();
     const [low, high] = [Number(m![1]) * 1000, Number(m![2]) * 1000];
 
@@ -267,5 +267,55 @@ describe("consistency with /llms.txt", () => {
     expect(e.annualWages.low).toBeGreaterThanOrEqual(low);
     expect(e.annualWages.low).toBeLessThanOrEqual(high);
     expect(e.annualWages.high).toBeGreaterThanOrEqual(high);
+  });
+});
+
+describe("workers' comp (02f)", () => {
+  it("is required, and TBD until we can cite a premium, at 16+ hours a week", () => {
+    for (const hoursPerWeek of [16, 40]) {
+      const e = estimate(input({ hoursPerWeek }));
+      expect(e.workersComp.label).toMatch(/required at 16\+ hrs\/week in Massachusetts/);
+      expect(isTbd(e.workersComp.value)).toBe(true);
+      expect(e.workersComp.sources[0].source_url).toMatch(/^https:\/\//);
+      expect(e.annualAllIn.pending).toContain("Workers' comp insurance");
+    }
+  });
+
+  it("is not required under 16 hours a week, and not pending", () => {
+    const e = estimate(input({ hoursPerWeek: 12, arrangement: "part_time" }));
+    expect(e.workersComp.value).toBe("not_required");
+    expect(e.workersComp.note).toBe("Not required under 16 hrs/week.");
+    expect(e.annualAllIn.pending).not.toContain("Workers' comp insurance");
+  });
+
+  it("is added to the total once a premium is in the data", () => {
+    const withPremium: CostModel = {
+      ...costData,
+      data_points: [
+        ...costData.data_points,
+        { ...costData.data_points[0], metric: "workers_comp_annual", segment: "household_employer", value: 600, unit: "usd_per_year" },
+      ],
+    };
+    const without = estimate(input());
+    const withWc = estimate(input(), withPremium);
+    expect(withWc.workersComp.value).toEqual({ low: 600, mid: 600, high: 600 });
+    expect(withWc.annualAllIn.known.mid - without.annualAllIn.known.mid).toBeCloseTo(600);
+    expect(withWc.annualAllIn.includes).toContain("workers' comp");
+    expect(withWc.annualAllIn.pending).not.toContain("Workers' comp insurance");
+  });
+});
+
+describe("paid time off (02f)", () => {
+  it("is shown with its source but never added to the total", () => {
+    const e = estimate(input());
+    expect(e.paidTimeOff.label).toMatch(/not required by law/);
+    expect(asRange(e.paidTimeOff.value).mid).toBeCloseTo(e.weekly.mid * 2);
+    expect(e.paidTimeOff.sources[0].source_url).toContain("care.com");
+    expect(e.excludedFromTotal).toContain("Paid time off");
+    // The total is wages + taxes + agency fee (+ workers' comp when known); PTO is not in it.
+    const fee = e.placementFee;
+    if (fee === "not_applicable" || isTbd(fee)) throw new Error("expected fees");
+    expect(e.annualAllIn.known.mid).toBeCloseTo(e.annualWages.mid + e.employerTaxes.known.mid + fee.range.mid);
+    expect(e.annualAllIn.includes).toEqual(["wages", "employer taxes", "agency fee"]);
   });
 });

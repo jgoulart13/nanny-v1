@@ -32,6 +32,10 @@ export const metricSchema = z.enum([
   // Agency fees (agency-disclosed)
   "placement_fee_min",
   "upfront_fee",
+  // Other employer costs
+  "workers_comp_annual",
+  "workers_comp_hours_threshold",
+  "paid_vacation_weeks",
 ]);
 
 export const dataPointSchema = z.object({
@@ -46,6 +50,8 @@ export const dataPointSchema = z.object({
     "pct_of_annual_wage",
     "pct_of_wages",
     "usd_per_quarter",
+    "hours_per_week",
+    "weeks_per_year",
   ]),
   source_name: z.string().min(1),
   source_url: z.url(),

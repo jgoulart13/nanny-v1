@@ -199,7 +199,7 @@ export function Estimator() {
         ) : (
           <>
             <div className="rounded-lg bg-white p-5 sm:p-6">
-              <p className="eyebrow">All-in, first year</p>
+              <p className="eyebrow">All-in, first year ({result.annualAllIn.includes.join(", ")})</p>
               <p className="mt-1 text-4xl font-medium text-pine tabular-nums sm:text-5xl">
                 {usdRange(result.annualAllIn.known)}
               </p>
@@ -218,6 +218,12 @@ export function Estimator() {
                   <Row key={l.key} label={l.label} value={l.value} note={l.note} indent />
                 ))}
                 <Row label="Employer taxes (known so far)" value={result.employerTaxes.known} strong />
+                <Row
+                  label={result.workersComp.label}
+                  value={result.workersComp.value}
+                  note={result.workersComp.note}
+                  strong
+                />
                 {result.placementFee === "not_applicable" ? (
                   <Row label="Agency fees" value="not_applicable" />
                 ) : isTbd(result.placementFee) ? (
@@ -233,6 +239,15 @@ export function Estimator() {
                 {result.familyShareHourly !== "not_applicable" && (
                   <Row label="Your share, per hour" value={result.familyShareHourly} />
                 )}
+              </dl>
+
+              {/* Shown for information only; never part of the all-in total. */}
+              <dl className="mt-4 rounded-lg bg-muted px-3 text-[15px]">
+                <Row
+                  label={result.paidTimeOff.label}
+                  value={result.paidTimeOff.value}
+                  note={result.paidTimeOff.note}
+                />
               </dl>
 
               {result.caveats.length > 0 && (
@@ -285,7 +300,7 @@ function Row({
   indent,
 }: {
   label: string;
-  value: Range | Tbd | "not_applicable";
+  value: Range | Tbd | "not_applicable" | "not_required";
   note?: string;
   strong?: boolean;
   indent?: boolean;
@@ -298,7 +313,9 @@ function Row({
         {note && <span className="mt-0.5 block text-sm font-normal text-muted-ink">{note}</span>}
       </dt>
       <dd className="text-right whitespace-nowrap tabular-nums">
-        {value === "not_applicable" ? (
+        {value === "not_required" ? (
+          <span className="text-muted-ink">Not required</span>
+        ) : value === "not_applicable" ? (
           <span className="text-muted-ink">Not applicable</span>
         ) : isTbd(value) ? (
           <span className="italic text-muted-ink" title={value.reason}>

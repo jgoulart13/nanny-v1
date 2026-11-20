@@ -27,6 +27,9 @@ const metricLabel: Record<DataPoint["metric"], string> = {
   ma_ui_quarterly_threshold: "Mass. unemployment starts at",
   placement_fee_min: "Minimum placement fee",
   upfront_fee: "Upfront fee",
+  workers_comp_annual: "Workers' comp insurance, yearly premium",
+  workers_comp_hours_threshold: "Workers' comp required from",
+  paid_vacation_weeks: "Typical paid vacation",
 };
 
 const segmentLabel: Record<string, string> = {
@@ -48,11 +51,15 @@ const unitSuffix: Record<DataPoint["unit"], string> = {
   usd_flat: "",
   pct_of_annual_wage: "",
   pct_of_wages: "",
+  hours_per_week: "",
+  weeks_per_year: "",
 };
 
 export function formatValue(p: DataPoint): string {
   if (p.unit === "pct_of_annual_wage") return `${p.value}% of first-year pay`;
   if (p.unit === "pct_of_wages") return `${p.value}% of wages`;
+  if (p.unit === "hours_per_week") return `${p.value} hrs/week`;
+  if (p.unit === "weeks_per_year") return `${p.value} weeks/yr`;
   return `${usd(p.value)}${unitSuffix[p.unit]}`;
 }
 

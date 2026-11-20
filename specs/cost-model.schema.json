@@ -51,7 +51,10 @@
               "ma_pfml_rate",
               "ma_pfml_employer_rate",
               "placement_fee_min",
-              "upfront_fee"
+              "upfront_fee",
+              "workers_comp_annual",
+              "workers_comp_hours_threshold",
+              "paid_vacation_weeks"
             ]
           },
           "segment": {
@@ -69,7 +72,9 @@
               "usd_flat",
               "pct_of_annual_wage",
               "pct_of_wages",
-              "usd_per_quarter"
+              "usd_per_quarter",
+              "hours_per_week",
+              "weeks_per_year"
             ]
           },
           "source_name": {
