@@ -1,6 +1,6 @@
 {
   "market": "Boston, MA",
-  "updated": "2026-11-19",
+  "updated": "2026-11-20",
   "_readme": "Public data is listing/asking-rate or modeled, NOT transacted agency-placed pricing. That gap is what we collect via the quote log. Re-verify every figure before launch.",
   "data_points": [
     {
@@ -356,6 +356,30 @@
       "basis": "government_published",
       "as_of": "2026",
       "confidence": "high"
+    },
+    {
+      "metric": "workers_comp_hours_threshold",
+      "segment": "household_employer",
+      "value": 16,
+      "unit": "hours_per_week",
+      "source_name": "GTM Payroll Services: Nanny taxes & payroll in Massachusetts (2026)",
+      "source_url": "https://gtm.com/household/household-employment-massachusetts",
+      "basis": "provider_reported",
+      "as_of": "2026",
+      "confidence": "high",
+      "notes": "\"In Massachusetts, you must carry workers' compensation insurance if your household employee works at least 16 hours per week.\" No premium is published; the premium itself stays TBD until we find a citable Massachusetts figure."
+    },
+    {
+      "metric": "paid_vacation_weeks",
+      "segment": "all",
+      "value": 2,
+      "unit": "weeks_per_year",
+      "source_name": "Care.com: Do nannies get paid vacation days? (citing the International Nanny Association survey)",
+      "source_url": "https://www.care.com/c/handling-nanny-vacations-holidays-and-sick-days",
+      "basis": "survey",
+      "as_of": "2025-11",
+      "confidence": "medium",
+      "notes": "\"Two weeks of paid vacation time is typical.\" Not required by Massachusetts law. Paid holidays and sick days are common too, but the source gives no typical count, so they're not included."
     }
   ],
   "assumptions": {

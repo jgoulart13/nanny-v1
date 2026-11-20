@@ -7,7 +7,8 @@ import { DisclosureNote } from "@/components/disclosure-note";
 import { JsonLd } from "@/components/json-ld";
 import { PageShell } from "@/components/page-intro";
 import { config, siteUrl } from "@/lib/config";
-import { formatUpdated, getGuide, guideSlugs, isGuideSlug } from "@/lib/guides";
+import { getGuide, guideSlugs, isGuideSlug } from "@/lib/guides";
+import { formatDate } from "@/lib/costData";
 
 export function generateStaticParams() {
   return guideSlugs.map((slug) => ({ slug }));
@@ -70,7 +71,7 @@ async function GuideBody({ params }: { params: PageProps<"/guides/[slug]">["para
 
       <article className="prose-width">
         <p className="eyebrow mb-3">
-          Guide · Updated <time dateTime={guide.updated}>{formatUpdated(guide.updated)}</time>
+          Guide · Updated <time dateTime={guide.updated}>{formatDate(guide.updated)}</time>
           {guide.readingTime !== "TBD" && ` · ${guide.readingTime}`}
         </p>
         <h1 className="text-4xl leading-tight sm:text-5xl">{guide.title}</h1>
