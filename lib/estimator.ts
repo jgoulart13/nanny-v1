@@ -91,7 +91,9 @@ export type AgencyFee = {
 
 export type Estimate = {
   /** Which group of data points the hourly range came from. */
-  segment: "newborn" | "part_time" | "general";
+  segment: "agency_placed" | "newborn" | "part_time" | "general";
+  /** Which kind of hourly rate was used, and a one-line explanation to show. */
+  rateBasis: { kind: "agency_placed" | "job_site"; explanation: string };
   hourly: Range;
   weekly: Range;
   /** Gross wages for a year (52 weeks). */
@@ -114,8 +116,16 @@ export type Estimate = {
 
 export const WEEKS_PER_YEAR = 52;
 
-/** Data points that describe Boston nanny pay in general. */
+/** Data points that describe Boston nanny pay in general (job-site rates). */
 const GENERAL_SEGMENTS = ["all", "child_care_provider"];
+
+/** What Boston agencies say the nannies they place typically earn. */
+export const AGENCY_PLACED_SEGMENT = "agency_placed";
+
+/** "Nanny Lane, Care.com" from a list of data points. */
+function sourceNames(points: DataPoint[]): string {
+  return [...new Set(points.map((p) => p.agency ?? p.source_name.split(/ — |: |, /)[0]))].join(", ");
+}
 
 export function isTbd(x: unknown): x is Tbd {
   return typeof x === "object" && x !== null && "tbd" in x;
@@ -132,7 +142,16 @@ export function estimate(
   const inputs = estimateInputsSchema.parse(rawInputs);
   const caveats: string[] = [];
 
-  // 1. Pick the most specific segment that has data.
+  // 1. Pick the hourly rates.
+  //    Through an agency: what Boston agencies say their placed nannies earn.
+  //    On your own: job-site asking/starting rates, most specific segment first.
+  const agencyPoints = inputs.viaAgency
+    ? pointsFor(model, "hourly_rate_avg", [AGENCY_PLACED_SEGMENT])
+    : [];
+  if (inputs.viaAgency && agencyPoints.length === 0) {
+    caveats.push("We don't have agency-placed rates yet, so this uses job-site rates.");
+  }
+
   const wanted: Estimate["segment"] =
     inputs.youngestAgeBand === "expecting" || inputs.youngestAgeBand === "0_12m"
       ? "newborn"
@@ -140,9 +159,10 @@ export function estimate(
         ? "part_time"
         : "general";
 
-  let segment = wanted;
-  let hourlySources =
-    wanted === "general"
+  let segment: Estimate["segment"] = agencyPoints.length ? AGENCY_PLACED_SEGMENT : wanted;
+  let hourlySources = agencyPoints.length
+    ? agencyPoints
+    : wanted === "general"
       ? pointsFor(model, "hourly_rate_avg", GENERAL_SEGMENTS)
       : pointsFor(model, "hourly_rate_avg", [wanted]);
 
@@ -162,6 +182,16 @@ export function estimate(
   if (hourlySources.length === 1) {
     caveats.push("This hourly rate comes from a single source.");
   }
+  const rateBasis: Estimate["rateBasis"] =
+    segment === AGENCY_PLACED_SEGMENT
+      ? {
+          kind: "agency_placed",
+          explanation: `Agency-placed rates: what Boston agencies say the nannies they place typically earn (${sourceNames(hourlySources)}). Job-site averages are lower because they're asking rates.`,
+        }
+      : {
+          kind: "job_site",
+          explanation: `Job-site rates: average asking or starting rates on ${sourceNames(hourlySources)}. Experienced, agency-placed nannies typically earn more.`,
+        };
 
   // 3. Wages: simple multiplication.
   const weekly = scale(hourly, inputs.hoursPerWeek);
@@ -239,6 +269,7 @@ export function estimate(
 
   return {
     segment,
+    rateBasis,
     hourly,
     weekly,
     annualWages,

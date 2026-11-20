@@ -19,7 +19,10 @@ import {
 const point = (metric: DataPoint["metric"], segment?: string) =>
   requirePoint(costData, metric, segment);
 
-const hourlyPoints = pointsFor(costData, "hourly_rate_avg");
+// Job-site asking/starting rates only; agency-placed rates are a different measure.
+const hourlyPoints = pointsFor(costData, "hourly_rate_avg").filter(
+  (p) => p.segment !== "agency_placed",
+);
 const hourlyValues = hourlyPoints.map((p) => p.value);
 
 /** "Nanny Lane, Care.com": every source behind the hourly range. */

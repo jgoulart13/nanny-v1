@@ -71,6 +71,8 @@ export type AgentResponse = {
     all_in: AgentLine;
   };
   hourly: AgentLine;
+  /** Which hourly rates were used: agency_placed (via an agency) or job_site (on your own). */
+  rate_basis: { kind: "agency_placed" | "job_site"; explanation: string };
   tbd_lines: string[];
   caveats: string[];
   as_of: string;
@@ -188,9 +190,10 @@ export function toAgentResponse(raw: AgentInputs = {}): AgentResponse {
     hourly: {
       label: "Hourly rate",
       value: roundCents(e.hourly),
-      note: "Average asking or starting rates across sources (lowest, median, highest).",
+      note: `${e.rateBasis.explanation} Range = lowest, median and highest across sources.`,
       sources: sources(e.hourlySources),
     },
+    rate_basis: e.rateBasis,
     tbd_lines: tbdLines,
     caveats: e.caveats,
     as_of: costData.updated,
@@ -239,7 +242,7 @@ export function summarize(r: AgentResponse): string {
   return (
     `A ${arrangementText[i.arrangement]} nanny (${i.hoursPerWeek} hours a week) for ${kids} in Boston, ${how}, ` +
     `costs about ${rangeText(r.annual.all_in.value)} in year one, all-in (${parts.join(", ")}). ` +
-    `Figures are 2026 Boston/Massachusetts numbers, each with a source below.${tbd} ` +
+    `${r.rate_basis.explanation} Figures are 2026 Boston/Massachusetts numbers, each with a source below.${tbd} ` +
     `Full explanation: ${r.guide_url} · Interactive estimator: ${r.estimator_url}. ${r.disclaimer}`
   );
 }
