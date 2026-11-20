@@ -211,7 +211,7 @@ export function Estimator() {
               )}
 
               <dl className="mt-6 divide-y divide-sand-light text-[15px]">
-                <Row label="Hourly rate" value={result.hourly} />
+                <Row label="Hourly rate" value={result.hourly} note={result.rateBasis.explanation} />
                 <Row label="Weekly wages" value={result.weekly} />
                 <Row label="Yearly wages" value={result.annualWages} strong />
                 {result.employerTaxes.lines.map((l) => (
@@ -254,7 +254,7 @@ export function Estimator() {
               </summary>
               <ul className="mt-3 divide-y divide-sand-light text-sm">
                 {result.sources.map((s) => (
-                  <li key={`${s.metric}-${s.segment}-${s.source_url}`} className="py-2">
+                  <li key={`${s.metric}-${s.segment}-${s.value}-${s.source_url}`} className="py-2">
                     <div className="flex items-baseline justify-between gap-3">
                       <span className="text-ink">{figureLabel(s)}</span>
                       <span className="shrink-0 font-medium tabular-nums">{formatValue(s)}</span>

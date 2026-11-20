@@ -37,6 +37,7 @@ const segmentLabel: Record<string, string> = {
   child_care_provider: "child care providers",
   infant_center: "daycare center",
   under_25_employees: "under 25 employees",
+  agency_placed: "agency-placed",
 };
 
 const unitSuffix: Record<DataPoint["unit"], string> = {

@@ -24,7 +24,7 @@ export function SourceTable() {
       {/* Phones: one card per figure */}
       <ul className="space-y-3 sm:hidden">
         {costData.data_points.map((p) => (
-          <li key={`${p.metric}-${p.segment}-${p.source_url}`} className="rounded-lg border border-sand-light bg-white p-4 text-[15px]">
+          <li key={`${p.metric}-${p.segment}-${p.value}-${p.source_url}`} className="rounded-lg border border-sand-light bg-white p-4 text-[15px]">
             <div className="flex items-baseline justify-between gap-3">
               <p className="text-ink">
                 {figureLabel(p)}
@@ -62,7 +62,7 @@ export function SourceTable() {
         </TableHeader>
         <TableBody>
           {costData.data_points.map((p) => (
-            <TableRow key={`${p.metric}-${p.segment}-${p.source_url}`} className="border-sand-light">
+            <TableRow key={`${p.metric}-${p.segment}-${p.value}-${p.source_url}`} className="border-sand-light">
               <TableCell className="whitespace-normal">
                 {figureLabel(p)}
               </TableCell>

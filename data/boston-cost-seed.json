@@ -1,6 +1,6 @@
 {
   "market": "Boston, MA",
-  "updated": "2026-11-18",
+  "updated": "2026-11-19",
   "_readme": "Public data is listing/asking-rate or modeled, NOT transacted agency-placed pricing. That gap is what we collect via the quote log. Re-verify every figure before launch.",
   "data_points": [
     {
@@ -48,6 +48,58 @@
       "basis": "listing_asking_rate",
       "as_of": "2026",
       "confidence": "medium"
+    },
+    {
+      "metric": "hourly_rate_avg",
+      "segment": "agency_placed",
+      "agency": "The Nanny Haven",
+      "unit": "usd_per_hour",
+      "source_name": "The Nanny Haven, Boston: typical candidate pay",
+      "source_url": "https://thenannyhaven.com/boston",
+      "basis": "agency_disclosed",
+      "as_of": "2026",
+      "confidence": "medium",
+      "value": 30,
+      "notes": "Low end of the $30–35/hr the agency gives as typical pay for nannies it places (as cited in content/guides/boston-nanny-wages.mdx)."
+    },
+    {
+      "metric": "hourly_rate_avg",
+      "segment": "agency_placed",
+      "agency": "The Nanny Haven",
+      "unit": "usd_per_hour",
+      "source_name": "The Nanny Haven, Boston: typical candidate pay",
+      "source_url": "https://thenannyhaven.com/boston",
+      "basis": "agency_disclosed",
+      "as_of": "2026",
+      "confidence": "medium",
+      "value": 35,
+      "notes": "High end of the $30–35/hr the agency gives as typical pay for nannies it places."
+    },
+    {
+      "metric": "hourly_rate_avg",
+      "segment": "agency_placed",
+      "agency": "Boston Nanny Centre",
+      "unit": "usd_per_hour",
+      "source_name": "Boston Nanny Centre: temporary care rates (Harvard HR)",
+      "source_url": "https://hr.harvard.edu/resource/why-choose-boston-nanny-center",
+      "basis": "agency_disclosed",
+      "as_of": "2026",
+      "confidence": "low",
+      "value": 30,
+      "notes": "Low end of $30–35/hr for the agency's temporary caregivers, per Harvard HR. Temporary care, not long-term placement, so lower confidence."
+    },
+    {
+      "metric": "hourly_rate_avg",
+      "segment": "agency_placed",
+      "agency": "Boston Nanny Centre",
+      "unit": "usd_per_hour",
+      "source_name": "Boston Nanny Centre: temporary care rates (Harvard HR)",
+      "source_url": "https://hr.harvard.edu/resource/why-choose-boston-nanny-center",
+      "basis": "agency_disclosed",
+      "as_of": "2026",
+      "confidence": "low",
+      "value": 35,
+      "notes": "High end of $30–35/hr for the agency's temporary caregivers, per Harvard HR."
     },
     {
       "metric": "monthly_cost",

@@ -11,6 +11,7 @@ import {
   type Range,
 } from "@/lib/estimator";
 import { costData, costModelSchema, type CostModel } from "@/lib/costData";
+import { GET as llmsTxt } from "@/app/llms.txt/route";
 
 const input = (over: Partial<EstimateInputs> = {}): EstimateInputs => ({
   ...defaultInputs,
@@ -49,11 +50,13 @@ describe("seed data", () => {
   });
 });
 
-describe("full-time", () => {
-  const e = estimate(input({ arrangement: "full_time", youngestAgeBand: "3_5y" }));
+describe("full-time, hiring on your own (job-site rates)", () => {
+  const e = estimate(input({ arrangement: "full_time", youngestAgeBand: "3_5y", viaAgency: false }));
 
-  it("uses general Boston rates (min / median / max)", () => {
+  it("uses general Boston job-site rates (min / median / max)", () => {
     expect(e.segment).toBe("general");
+    expect(e.rateBasis.kind).toBe("job_site");
+    expect(e.rateBasis.explanation).toMatch(/^Job-site rates/);
     expect(e.hourly).toEqual({ low: 22.61, mid: (22.61 + 22.66) / 2, high: 22.66 });
     expect(e.hourlySources.map((s) => s.value).sort()).toEqual([22.61, 22.66]);
   });
@@ -71,13 +74,31 @@ describe("full-time", () => {
     expect(e.employerTaxes.pending).toEqual([]);
   });
 
+  it("has no agency fee", () => {
+    expect(e.placementFee).toBe("not_applicable");
+  });
+});
+
+describe("full-time, through an agency (agency-placed rates)", () => {
+  const e = estimate(input({ arrangement: "full_time", youngestAgeBand: "3_5y" }));
+
+  it("uses the agency-placed rates ($30–35/hr) and says so", () => {
+    expect(e.segment).toBe("agency_placed");
+    expect(e.hourly).toEqual({ low: 30, mid: 32.5, high: 35 });
+    expect(new Set(e.hourlySources.map((s) => s.agency))).toEqual(new Set(["The Nanny Haven", "Boston Nanny Centre"]));
+    expect(e.rateBasis.kind).toBe("agency_placed");
+    expect(e.rateBasis.explanation).toMatch(/^Agency-placed rates/);
+    expect(e.rateBasis.explanation).toContain("The Nanny Haven");
+    expect(e.rateBasis.explanation).toContain("Boston Nanny Centre");
+  });
+
   it("agency fees: range across the two agencies that publish theirs", () => {
     const fee = e.placementFee;
     if (fee === "not_applicable" || isTbd(fee)) throw new Error("expected fees");
     expect(fee.byAgency.map((a) => a.agency).sort()).toEqual(["Boston Nanny Centre", "The Nanny Haven"]);
     // Low: The Nanny Haven, 15% + $300. High: Boston Nanny Centre, 18% + $500.
-    expect(fee.range.low).toBeCloseTo(22.61 * 40 * 52 * 0.15 + 300);
-    expect(fee.range.high).toBeCloseTo(22.66 * 40 * 52 * 0.18 + 500);
+    expect(fee.range.low).toBeCloseTo(30 * 40 * 52 * 0.15 + 300);
+    expect(fee.range.high).toBeCloseTo(35 * 40 * 52 * 0.18 + 500);
   });
 
   it("all-in adds wages, known taxes and the agency fee; lists what's missing", () => {
@@ -99,8 +120,8 @@ describe("full-time", () => {
 });
 
 describe("part-time", () => {
-  it("uses the part-time data point", () => {
-    const e = estimate(input({ arrangement: "part_time", hoursPerWeek: 20, youngestAgeBand: "3_5y" }));
+  it("uses the part-time data point when hiring on your own", () => {
+    const e = estimate(input({ arrangement: "part_time", hoursPerWeek: 20, youngestAgeBand: "3_5y", viaAgency: false }));
     expect(e.segment).toBe("part_time");
     expect(e.hourly).toEqual({ low: 21.37, mid: 21.37, high: 21.37 });
     expect(e.weekly.mid).toBeCloseTo(21.37 * 20);
@@ -109,8 +130,8 @@ describe("part-time", () => {
 });
 
 describe("newborn", () => {
-  it.each(["0_12m", "expecting"] as const)("youngest %s uses newborn rates", (band) => {
-    const e = estimate(input({ youngestAgeBand: band, children: band === "expecting" ? 0 : 1 }));
+  it.each(["0_12m", "expecting"] as const)("youngest %s uses newborn rates when hiring on your own", (band) => {
+    const e = estimate(input({ youngestAgeBand: band, children: band === "expecting" ? 0 : 1, viaAgency: false }));
     expect(e.segment).toBe("newborn");
     expect(e.hourly.mid).toBe(24.2);
   });
@@ -118,7 +139,7 @@ describe("newborn", () => {
 
 describe("nanny share", () => {
   it("keeps the nanny's full rate and marks the family's share TBD", () => {
-    const e = estimate(input({ arrangement: "nanny_share", youngestAgeBand: "1_2y" }));
+    const e = estimate(input({ arrangement: "nanny_share", youngestAgeBand: "1_2y", viaAgency: false }));
     expect(e.segment).toBe("general");
     expect(isTbd(e.familyShareHourly)).toBe(true);
     expect(e.annualAllIn.pending).toContain("Your family's share of a nanny share");
@@ -144,8 +165,8 @@ describe("missing data", () => {
   });
 
   it("applies agency minimums for small schedules", () => {
-    // Part-time, 20 h/week: 15% and 18% both fall below each agency's minimum.
-    const fee = estimate(input({ arrangement: "part_time", hoursPerWeek: 20, youngestAgeBand: "3_5y" })).placementFee;
+    // Part-time, 10 h/week at $30–35: 15% and 18% both fall below each agency's minimum.
+    const fee = estimate(input({ arrangement: "part_time", hoursPerWeek: 10, youngestAgeBand: "3_5y" })).placementFee;
     if (fee === "not_applicable" || isTbd(fee)) throw new Error("expected fees");
     expect(fee.range.low).toBe(4500 + 300);
     expect(fee.range.high).toBe(7500 + 500);
@@ -153,7 +174,7 @@ describe("missing data", () => {
 
   it("skips FICA and FUTA below the IRS thresholds", () => {
     // 2 h/week × $21.37 × 52 = $2,222: under $3,000/yr and $1,000/quarter.
-    const e = estimate(input({ arrangement: "part_time", hoursPerWeek: 2, youngestAgeBand: "3_5y" }));
+    const e = estimate(input({ arrangement: "part_time", hoursPerWeek: 2, youngestAgeBand: "3_5y", viaAgency: false }));
     expect(asRange(line(e, "fica").value).mid).toBe(0);
     expect(asRange(line(e, "futa").value).mid).toBe(0);
   });
@@ -173,7 +194,7 @@ describe("missing data", () => {
       ...costData,
       data_points: costData.data_points.filter((p) => p.segment !== "part_time"),
     };
-    const e = estimate(input({ arrangement: "part_time", youngestAgeBand: "3_5y" }), noPartTime);
+    const e = estimate(input({ arrangement: "part_time", youngestAgeBand: "3_5y", viaAgency: false }), noPartTime);
     expect(e.segment).toBe("general");
     expect(e.caveats.join(" ")).toMatch(/don't have part-time rates/);
   });
@@ -185,8 +206,19 @@ describe("missing data", () => {
   });
 
   it("no Mass. UI under $1,000 a quarter", () => {
-    const e = estimate(input({ arrangement: "part_time", hoursPerWeek: 3 }));
+    const e = estimate(input({ arrangement: "part_time", hoursPerWeek: 3, viaAgency: false }));
     expect(asRange(line(e, "ma_ui").value).low).toBe(0);
+  });
+
+  it("falls back to job-site rates when there are no agency-placed rates", () => {
+    const noAgencyRates: CostModel = {
+      ...costData,
+      data_points: costData.data_points.filter((p) => p.segment !== "agency_placed"),
+    };
+    const e = estimate(input(), noAgencyRates);
+    expect(e.segment).toBe("general");
+    expect(e.rateBasis.kind).toBe("job_site");
+    expect(e.caveats.join(" ")).toMatch(/don't have agency-placed rates/);
   });
 
   it("flags what the data doesn't cover", () => {
@@ -218,5 +250,22 @@ describe("helpers", () => {
     expect(usd(0)).toBe("$0");
     expect(usdRange({ low: 21.37, mid: 21.37, high: 21.37 })).toBe("$21.37");
     expect(usdRange({ low: 22.61, mid: 22.635, high: 22.66 })).toBe("$22.61–$22.66");
+  });
+});
+
+describe("consistency with /llms.txt", () => {
+  it("default inputs (agency, full-time, 40 h) give wages consistent with the \"$55–70k+\" in /llms.txt", async () => {
+    const text = await llmsTxt().text();
+    // e.g. "costs about $55,000-70,000+ a year in wages"
+    const m = text.match(/\$(\d{2,3}),000[-–](\d{2,3}),000\+ a year in wages/);
+    expect(m, "/llms.txt no longer states a full-time wage range").not.toBeNull();
+    const [low, high] = [Number(m![1]) * 1000, Number(m![2]) * 1000];
+
+    const e = estimate(defaultInputs);
+    expect(defaultInputs).toMatchObject({ viaAgency: true, arrangement: "full_time", hoursPerWeek: 40 });
+    // The estimate starts inside the stated range, and its top reaches the "+".
+    expect(e.annualWages.low).toBeGreaterThanOrEqual(low);
+    expect(e.annualWages.low).toBeLessThanOrEqual(high);
+    expect(e.annualWages.high).toBeGreaterThanOrEqual(high);
   });
 });
