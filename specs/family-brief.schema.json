@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://{{DOMAIN}}/specs/family-brief.schema.json",
+  "$id": "https://www.sillygooseboston.com/specs/family-brief.schema.json",
   "title": "FamilyBrief",
   "description": "A family's childcare need. Contains no child names or birthdates by design.",
   "type": "object",
